@@ -1,13 +1,11 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import prismadb from "@/lib/prismadb";
-import { z } from "zod";
 
 export async function POST(req: Request) {
   try {
     const body = await req.json(); // Parse request body
     const { email, name, password } = body;
-    
     // Check if the email already exists
     const existingUser = await prismadb.user.findUnique({
       where: { email },
