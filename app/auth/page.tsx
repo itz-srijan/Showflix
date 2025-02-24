@@ -2,9 +2,11 @@
 import Input from "@/Components/Input";
 import { useCallback, useState } from "react";
 import axios from "axios";
-// import { signIn } from "next-auth/react";
+import { signIn } from "next-auth/react";
+import GoogleSignInButton from "@/Components/googleSignInButton";
 
 const Auth = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
@@ -16,6 +18,28 @@ const Auth = () => {
       currentVariant === "login" ? "register" : "login"
     );
   }, []);
+
+  // login for existing user
+  const login = useCallback(async () => {
+    if (!email || !password) {
+      alert("Please provide both email and password.");
+      return;
+    }
+    // setIsLoading(true); // Start loading
+
+    try {
+      await signIn("credentials", {
+        email,
+        password,
+        callbackUrl: "/",
+      });
+    } catch (error) {
+      alert("An unexpected error occurred.");
+    } 
+    // finally {
+    //   setIsLoading(false); // Stop loading
+    // }
+  }, [email, password]);
 
   //register a new user
   const register = useCallback(async () => {
@@ -31,6 +55,7 @@ const Auth = () => {
         password,
       });
       console.log("Registration successful:", response.data);
+      login(); // Log in the user after registering
     } catch (error: any) {
       if (error.response?.status === 422) {
         alert(error.response.data.error); // Handle "Email taken"
@@ -43,20 +68,6 @@ const Auth = () => {
       }
     }
   }, [email, name, password]);
-
-  //login for existing user
-  // const login = useCallback(async () => {
-  //   try {
-  //     await signIn('credentials', {
-  //       email,
-  //       password,
-  //       redirect : false,
-  //       callbackUrl: '/'
-  //     })
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // },[email,password]);
 
   return (
     <div className=" relative w-full h-screen bg-[url('/images/hero.jpg')] bg-no-repeat bg-center bg-cover">
@@ -95,12 +106,17 @@ const Auth = () => {
                 type='password'
                 placeholder='Password'
               />
+
               <button
-                onClick={register}
+                onClick={variant === "login" ? login : register}
                 className='bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded'
               >
                 {variant === "login" ? "Login" : "Register"}
               </button>
+
+              <div className='flex flex-row items-center justify-center mt-8'>
+                <GoogleSignInButton />
+              </div>
             </div>
 
             {variant === "login" && (
