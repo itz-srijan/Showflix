@@ -6,13 +6,12 @@ import { signIn } from "next-auth/react";
 import GoogleSignInButton from "@/Components/googleSignInButton";
 
 const Auth = () => {
-  const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [variant, setVariant] = useState("login");
 
-  //to toggle between login page and register apge
+  //to toggle between login page and register page
   const toggleVariant = useCallback(() => {
     setVariant((currentVariant) =>
       currentVariant === "login" ? "register" : "login"
