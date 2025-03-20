@@ -7,7 +7,7 @@ const GoogleSignInButton = () => {
   const handleGoogleSignIn = async () => {
     try {
       // Redirect to the root page after login
-      await signIn("google", { callbackUrl: "/" });
+      await signIn("google", { callbackUrl: "/profiles" });
     } catch (error) {
       console.error("Google sign-in failed:", error);
       alert("Failed to sign in with Google. Please try again.");

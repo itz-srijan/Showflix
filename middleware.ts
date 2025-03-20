@@ -4,7 +4,7 @@ import { getToken } from "next-auth/jwt";
 
 // This function can be marked `async` if using `await` inside
 export async function middleware(req: NextRequest) {
-  //   return NextResponse.redirect(new URL("/auth", request.url));
+  // return NextResponse.redirect(new URL("/auth", request.url));
   const path = req.nextUrl.pathname;
 
   const session = await getToken({
@@ -19,6 +19,7 @@ export async function middleware(req: NextRequest) {
   }
   return NextResponse.next();
 }
+
 // See "Matching Paths" below to learn more
 export const config = {
   matcher: "/((?!_next|favicon.ico|api/auth|public|images).*)",

@@ -1,4 +1,5 @@
 "use client";
+
 import Input from "@/Components/Input";
 import { useCallback, useState } from "react";
 import axios from "axios";
@@ -30,7 +31,7 @@ const Auth = () => {
       await signIn("credentials", {
         email,
         password,
-        callbackUrl: "/",
+        callbackUrl: "/profiles",
       });
     } catch (error) {
       alert("An unexpected error occurred.");
