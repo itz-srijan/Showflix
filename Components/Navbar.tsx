@@ -17,7 +17,7 @@ export default function Navbar() {
   }, []);
 
   return (
-    <nav className='w-full fixed z-40'>
+    <nav className='w-full z-40'>
       <div className='px-4 md:px-16 py-6 flex flex-row items-center transition duration-500 bg-zinc-900 bg-opacity-90'>
         {/* Logo */}
         <img className='h-4 lg:h-7' src='/images/logo.jpg' alt='logo' />
@@ -38,7 +38,11 @@ export default function Navbar() {
           className='lg:hidden flex flex-row items-center gap-4 ml-8 cursor-pointer'
         >
           <p className='text-white text-sm'>Browse</p>
-          <BsChevronDown className={`text-white text-sm transition ${showMobileMenu ? 'rotate-180' : 'rotate-0'}`} />
+          <BsChevronDown
+            className={`text-white text-sm transition ${
+              showMobileMenu ? "rotate-180" : "rotate-0"
+            }`}
+          />
           <MobileMenu visible={showMobileMenu} />
         </div>
         <div className='flex flex-row gap-7 ml-auto items-center'>
