@@ -1,3 +1,7 @@
+@import "@fontsource/roboto"; /* Default weight */
+@import "@fontsource/roboto/400.css"; /* Specify weight if needed */
+@import "@fontsource/roboto/700.css"; /* Bold */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

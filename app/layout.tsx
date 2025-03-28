@@ -1,3 +1,11 @@
+import "@fontsource/roboto"; /* Default weight */
+import "@fontsource/roboto/400.css"; /* Specify weight if needed */
+import "@fontsource/roboto/700.css"; /* Bold */
+import { Roboto } from "next/font/google";
+
+const roboto = Roboto({ subsets: ["latin"], weight: ["400", "700"] });
+
+
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -27,7 +35,7 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased font-roboto`}
       >
         <Providers>
           <GenreProvider>{children}</GenreProvider>
