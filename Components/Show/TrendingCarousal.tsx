@@ -14,9 +14,7 @@ interface CarouselProps {
     | undefined;
 }
 
-export default function TrendingCarousel({
-  trendingMovieData,
-}: CarouselProps) {
+export default function TrendingCarousel({ trendingMovieData }: CarouselProps) {
   const IMAGE_URL = "https://image.tmdb.org/t/p/original/";
   const poster_URL = "https://image.tmdb.org/t/p/w500";
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -50,11 +48,12 @@ export default function TrendingCarousel({
   //getting genre name from genre id
   const { movieIdToGenre } = useGenre();
   let genreName: string[] = [];
-  (trendingMovieData) && (
-      trendingMovieData[currentIndex].genre_ids.forEach((id) => {
-        genreName.push(movieIdToGenre(id));
-      })
-    );
+  trendingMovieData &&
+    trendingMovieData[currentIndex].genre_ids.forEach((id) => {
+      let gnr = movieIdToGenre(id);
+
+      gnr.length > 0 && genreName.push(gnr);
+    });
 
   if (!trendingMovieData || trendingMovieData.length === 0) {
     return <div>No trendingMovieData available</div>;

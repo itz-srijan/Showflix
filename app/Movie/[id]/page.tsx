@@ -3,10 +3,7 @@
 import { useEffect, useState } from "react";
 import { FaPlay, FaPlus } from "react-icons/fa";
 import { CiCalendarDate, CiTimer } from "react-icons/ci";
-
-const apiKey = process.env.NEXT_PUBLIC_TMDB_API_KEY;
-const movieUrl = `https://api.themoviedb.org/3/movie/155?language=en-US&api_key=${apiKey}`;
-const imageUrl = "https://image.tmdb.org/t/p/original";
+import { useParams } from "next/navigation";
 
 export default function Movie() {
   interface MovieDetail {
@@ -21,6 +18,13 @@ export default function Movie() {
 
   const [movieDetail, setMovieDetail] = useState<MovieDetail | null>(null);
   const [isExpanded, setIsExpanded] = useState(false);
+
+  const params = useParams();
+  console.log(params);
+
+  const apiKey = process.env.NEXT_PUBLIC_TMDB_API_KEY;
+  const movieUrl = `https://api.themoviedb.org/3/movie/${params.id}?language=en-US&api_key=${apiKey}`;
+  const imageUrl = "https://image.tmdb.org/t/p/original";
 
   useEffect(() => {
     fetch(movieUrl)
@@ -47,7 +51,7 @@ export default function Movie() {
       }}
     >
       {/* Overlay */}
-      <div className='absolute inset-0 bg-black bg-opacity-70'></div>
+      <div className='absolute inset-0 bg-black bg-opacity-60'></div>
 
       {/* Content */}
       <div className='relative z-10 flex flex-col justify-center h-full p-10 max-w-2xl'>
@@ -83,14 +87,14 @@ export default function Movie() {
           {movieDetail.genres.map((genre) => (
             <span
               key={genre.id}
-              className='bg-gray-800 px-3 py-1 rounded-full text-sm'
+              className='bg-red-900 px-3 py-1 rounded-full text-sm'
             >
               {genre.name}
             </span>
           ))}
         </div>
         {/* Overview */}
-        <p className='text-lg text-white mt-4 italic'>
+        <p className='text-lg text-white text-pretty mt-4 italic'>
           {isExpanded ? movieDetail.overview : shortOverview}
           {movieDetail.overview.length > 150 && (
             <button
@@ -107,10 +111,10 @@ export default function Movie() {
           <button className='flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg text-lg font-semibold'>
             <FaPlay /> Play
           </button>
-          <button className='flex items-center gap-2 border-2 bg-gray-600/50 hover:bg-gray-700 border-blue-600 text-white px-6 py-3 rounded-lg text-lg font-semibold'>
+          <button className='flex items-center gap-2 bg-gray-800 hover:bg-gray-700 text-white px-6 py-3 rounded-lg text-lg font-semibold'>
             <FaPlay /> Trailer
           </button>
-          <button className='flex items-center gap-2 bg-gray-800 hover:bg-gray-700 text-white px-6 py-3 rounded-lg text-lg font-semibold'>
+          <button className='flex items-center gap-2 bg-red-600 hover:bg-red-800 text-white px-6 py-3 rounded-lg text-lg font-semibold'>
             <FaPlus /> Add to Watchlist
           </button>
         </div>

@@ -37,7 +37,7 @@ export const GenreProvider = ({ children }: { children: ReactNode }) => {
 
   // Function to get genre name from ID
   const movieIdToGenre = (id: number): string => {
-    return genres.find((genre) => genre.id === id)?.name || "Unknown";
+    return genres.find((genre) => genre.id === id)?.name || "";
   };
 
   return (

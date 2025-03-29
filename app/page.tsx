@@ -3,7 +3,7 @@
 import Navbar from "@/Components/Navbar";
 import { useEffect, useState } from "react";
 import TrendingCarousel from "@/Components/Show/TrendingCarousal";
-import MovieSlider from "@/Components/Show/MovieSlider";
+import ShowSlider from "@/Components/Show/ShowSlider";
 
 const apiKey = process.env.NEXT_PUBLIC_TMDB_API_KEY;
 const url = `https://api.themoviedb.org/3/trending/all/day?language=en-US&api_key=${apiKey}`;
@@ -20,14 +20,13 @@ export default function Home() {
   }
 
   const [movieData, setMovieData] = useState<MovieData | null>(null);
-  // console.log(genreList);
   // fetching trending movies
   useEffect(() => {
     fetch(url)
       .then((res) => res.json())
       .then((data) => {
         setMovieData(data);
-        // console.log(data);
+        console.log(data);
       });
   }, [url]);
 
@@ -44,7 +43,7 @@ export default function Home() {
       <div className='mt-0.5 p-4'>
         <TrendingCarousel trendingMovieData={trendingMovieData} />
       </div>
-      <MovieSlider />
+      <ShowSlider />
     </div>
   );
 }

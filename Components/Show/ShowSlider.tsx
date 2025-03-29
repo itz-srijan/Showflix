@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
 import Slider from "./Slider";
 
-export default function MovieSlider() {
+export default function ShowSlider() {
   interface MovieData {
     results: {
+      id: number;
       title: string;
       poster_path: string;
       name: string;
@@ -43,6 +44,7 @@ export default function MovieSlider() {
   const filterMovieData = (data: MovieData) => {
     return data
       ? data.results.map((movie) => ({
+          id: movie.id,
           poster_path: movie.poster_path,
           title: movie.title || movie.name,
           genre_ids: movie.genre_ids,
@@ -52,9 +54,19 @@ export default function MovieSlider() {
   return (
     <div>
       {/* popular */}
-      {popularMovieData && <Slider sliderHeader="Popular Among People" movieData={filterMovieData(popularMovieData)} />}
+      {popularMovieData && (
+        <Slider
+          sliderHeader='Popular Among People'
+          movieData={filterMovieData(popularMovieData)}
+        />
+      )}
       {/* top rated */}
-      {topRatedMovieData && <Slider sliderHeader="Top Rated" movieData={filterMovieData(topRatedMovieData)} />}
+      {topRatedMovieData && (
+        <Slider
+          sliderHeader='Top Rated'
+          movieData={filterMovieData(topRatedMovieData)}
+        />
+      )}
     </div>
   );
 }
