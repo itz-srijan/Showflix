@@ -2,6 +2,7 @@ import NavbarItem from "./NavbarItem";
 import { BsBell, BsChevronDown, BsSearch } from "react-icons/bs";
 import MobileMenu from "./MobileMenu";
 import AccountMenu from "./AccountMenu";
+import SearchButton from "./SearchButton";
 import { useCallback, useState } from "react";
 
 export default function Navbar() {
@@ -47,7 +48,7 @@ export default function Navbar() {
         </div>
         <div className='flex flex-row gap-7 ml-auto items-center'>
           <div className='text-gray-200 hover:text-gray-300 cursor-pointer transition'>
-            <BsSearch />
+            <SearchButton />
           </div>
           <div className='text-gray-200 hover:text-gray-300 cursor-pointer transition'>
             <BsBell />
