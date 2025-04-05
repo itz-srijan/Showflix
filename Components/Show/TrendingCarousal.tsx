@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
 import { RxDotFilled } from "react-icons/rx";
 import { useGenre } from "@/context/GenreContext";
+import Image from "next/image";
 
 interface CarouselProps {
   trendingMovieData:
@@ -65,10 +66,12 @@ export default function TrendingCarousel({ trendingMovieData }: CarouselProps) {
       <div className='flex gap-5 w-full '>
         {/* Left Div (30%) - poster*/}
         <div className='w-[20%] h-[270px] bg-white text-black text-2xl font-bold flex items-center justify-center rounded-lg shadow-lg  border-4 border-gray-300 transition-transform duration-300 hover:scale-105 hover:shadow-2xl'>
-          <img
+          <Image
             src={`${poster_URL}${trendingMovieData[currentIndex].poster_path}`}
             alt=''
             className='h-full w-full static'
+            width={500}
+            height={270}
           />
         </div>
 

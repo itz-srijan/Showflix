@@ -1,26 +1,28 @@
-import React from "react";
+import SearchButton from "./SearchButton";
 
-interface MobileMenuProps {
-  visible?: boolean;
-}
-
-const MobileMenu: React.FC<MobileMenuProps> = ({ visible }) => {
-  if (!visible) return null;
-    
+const MobileMenu = () => {
   return (
-    <div className='bg-black w-56 absolute top-8 left-0 py-5 flex-col border-2 border-gray-800 flex'>
-        <div className="flex flex-col gap-4">
-            <div className="px-3 text-center text-white hover:underline">Home</div>
-            <div className="px-3 text-center text-white hover:underline">Series</div>
-            <div className="px-3 text-center text-white hover:underline">Films</div>
-            <div className="px-3 text-center text-white hover:underline">New & Popular</div>
-            <div className="px-3 text-center text-white hover:underline">My List</div>
-            <div className="px-3 text-center text-white hover:underline">Browse by Languages</div>
+    <div className='h-auto bg-black/90 w-auto absolute left-0 pt-4 pb-10 flex flex-col z-50'>
+      <SearchButton isMobile={true} />
+      <div className='flex flex-col gap-2 mt-5 text-lg px-2'>
+        <div className='hover:border-2 hover:rounded-xl px-2 text-center text-white hover:bg-blue-500/60 hover:z-30 hover:shadow-lg hover:transition-shadow hover:duration-300'>
+          Home
         </div>
+        <div className='hover:border-2 hover:rounded-xl px-2 text-center text-white hover:bg-blue-500/60 hover:z-30 hover:shadow-lg hover:transition-shadow hover:duration-300'>
+          Movies
+        </div>
+        <div className='hover:border-2 hover:rounded-xl px-2 text-center text-white hover:bg-blue-500/60 hover:z-30 hover:shadow-lg hover:transition-shadow hover:duration-300'>
+          Series
+        </div>
+        <div className='hover:border-2 hover:rounded-xl px-2 text-center text-white hover:bg-blue-500/60 hover:z-30 hover:shadow-lg hover:transition-shadow hover:duration-300'>
+          Popular
+        </div>
+        <div className='hover:border-2 hover:rounded-xl px-2 text-center text-white hover:bg-blue-500/60 hover:z-30 hover:shadow-lg hover:transition-shadow hover:duration-300'>
+          My List
+        </div>
+      </div>
     </div>
   );
 };
 
 export default MobileMenu;
-
-

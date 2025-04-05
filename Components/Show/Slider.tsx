@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import Image from "next/image";
 import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
 import { useRouter } from "next/navigation";
 
@@ -90,18 +91,16 @@ export default function Slider({ sliderHeader, movieData }: SliderProps) {
             }
           `}</style>
           {movieData?.map((movie, index) => (
-            <div
+            <Image
               onClick={() => router.push(`/Series/${movie.id}`)}
               key={movie.title + index}
-              className='relative w-[150px] md:w-[200px] shrink-0'
-            >
-              <img
-                src={`${poster_URL}${movie.poster_path}`}
-                alt={movie.title}
-                draggable={false}
-                className='w-full h-auto rounded-lg transform transition-transform duration-300 hover:scale-110 hover:shadow-xl hover:p-2'
-              />
-            </div>
+              src={`${poster_URL}${movie.poster_path}`}
+              alt={movie.title}
+              draggable={false}
+              width={200}
+              height={300}
+              className='relative w-[150px] md:w-[200px] shrink-0 rounded-lg transform transition-transform duration-300 hover:scale-110 hover:shadow-xl hover:p-2'
+            />
           ))}
         </div>
 

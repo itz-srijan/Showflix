@@ -1,4 +1,5 @@
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 interface SearchResultsProps {
   results:
@@ -32,27 +33,19 @@ export default function SearchResults({
         <div className="text-xl p-1">POPULAR</div>
         <div className='grid grid-cols-5 gap-5 p-1'>
           {results.slice(0, 5).map((data) => (
-            <div
+            <Image
               key={data.id}
-              className='relative overflow-hidden rounded-lg group cursor-pointer'
-            >
-              <img
-                src={
-                  mediaType === "person"
-                    ? `${profile_url}${data.profile_path}`
-                    : `${poster_URL}${data.poster_path}`
-                }
-                alt={data.name || "Image not available"}
-                draggable={false}
-                className='w-full h-full rounded-lg transform transition-transform duration-300 group-hover:scale-105'
-              />
-              <div className='absolute inset-0 bg-blue-700/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300'>
-                <div className='text-white text-lg font-semibold'>
-                  <p>{data.name}</p>
-                  <p>{data.popularity}</p>
-                </div>
-              </div>
-            </div>
+              src={
+              mediaType === "person"
+                ? `${profile_url}${data.profile_path}`
+                : `${poster_URL}${data.poster_path}`
+              }
+              alt={data.name || "Image not available"}
+              draggable={false}
+              width={300}
+              height={450}
+              className='relative overflow-hidden rounded-lg group cursor-pointer w-full h-full transform transition-transform duration-300 group-hover:scale-105'
+            />
           ))}
         </div>
       </div>
@@ -72,6 +65,7 @@ export default function SearchResults({
               <div>No search result found in {mediaType}</div>
             ) : (
               <div
+                key={data.id}
                 onClick={() => {
                   let id = data.id;
                   switch (data.media_type) {
@@ -85,23 +79,24 @@ export default function SearchResults({
                       break;
                   }
                 }}
-                key={data.id}
                 className='relative overflow-hidden rounded-lg group cursor-pointer'
               >
-                <img
-                  src={
+                  <Image
+                    src={
                     mediaType === "person"
                       ? `${profile_url}${data.profile_path}`
                       : `${poster_URL}${data.poster_path}`
-                  }
-                  alt={
+                    }
+                    alt={
                     data.profile_path || data.poster_path
                       ? data.name
-                      : "Image not availabe"
-                  }
-                  draggable={false}
-                  className='w-full h-full rounded-lg transform transition-transform duration-300 group-hover:scale-105'
-                />
+                      : "Image not available"
+                    }
+                    draggable={false}
+                    width={300}
+                    height={450}
+                    className='w-full h-full rounded-lg transform transition-transform duration-300 group-hover:scale-105'
+                  />
                 <div className='absolute inset-0 bg-blue-700/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300'>
                   <div className='text-white text-lg font-semibold'>
                     <p>{data.name}</p>
