@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { FaPlay, FaPlus } from "react-icons/fa";
 import { CiCalendarDate, CiTimer } from "react-icons/ci";
 import { useParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export default function Movie() {
   interface MovieDetail {
@@ -20,7 +21,7 @@ export default function Movie() {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const params = useParams();
-  console.log(params);
+  // console.log(params);
 
   const apiKey = process.env.NEXT_PUBLIC_TMDB_API_KEY;
   const movieUrl = `https://api.themoviedb.org/3/movie/${params.id}?language=en-US&api_key=${apiKey}`;
@@ -34,6 +35,8 @@ export default function Movie() {
         console.log(data);
       });
   }, [movieUrl]);
+
+  const router = useRouter();
 
   if (!movieDetail) return <div>Loading...</div>;
 
@@ -108,10 +111,13 @@ export default function Movie() {
 
         {/* Buttons */}
         <div className='mt-6 flex gap-4'>
-          <button className='flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg text-lg font-semibold'>
+          <button
+            onClick={() => router.push(`/Movie/${params.id}/play`)}
+            className='flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg text-lg font-semibold'
+          >
             <FaPlay /> Play
           </button>
-          <button className='flex items-center gap-2 bg-gray-800 hover:bg-gray-700 text-white px-6 py-3 rounded-lg text-lg font-semibold'>
+          <button className='flex items-center gap-2 bg-gray-600 hover:bg-gray-800 text-white px-6 py-3 rounded-lg text-lg font-semibold'>
             <FaPlay /> Trailer
           </button>
           <button className='flex items-center gap-2 bg-red-600 hover:bg-red-800 text-white px-6 py-3 rounded-lg text-lg font-semibold'>

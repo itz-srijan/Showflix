@@ -10,6 +10,7 @@ export default function ShowSlider() {
       poster_path: string;
       name: string;
       genre_ids: number[];
+      media_type: string;
     }[];
   }
   const apiKey = process.env.NEXT_PUBLIC_TMDB_API_KEY;
@@ -57,12 +58,14 @@ export default function ShowSlider() {
       {popularMovieData && (
         <Slider
           sliderHeader='Popular Among People'
+          media_type='movie'
           movieData={filterMovieData(popularMovieData)}
         />
       )}
       {/* top rated */}
       {topRatedMovieData && (
         <Slider
+          media_type='tv'
           sliderHeader='Top Rated'
           movieData={filterMovieData(topRatedMovieData)}
         />

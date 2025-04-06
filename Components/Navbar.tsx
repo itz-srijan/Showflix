@@ -4,16 +4,30 @@ import AccountMenu from "./AccountMenu";
 import SearchButton from "./SearchButton";
 import { IoMenu } from "react-icons/io5";
 import { FaChevronLeft } from "react-icons/fa6";
-import { useCallback, useState } from "react";
+import { useEffect, useState } from "react";
 import MobileMenu from "./MobileMenu";
 
 export default function Navbar() {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
 
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 0);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
     <div>
-      <nav className='w-full z-80'>
-        <div className='px-0 lg:px-4 py-4 flex justify-between transition duration-500 bg-gray-700'>
+      <nav className='max-w-screen max-h-20 w-screen z-50 fixed'>
+        <div
+          className={`fixed px-0 lg:px-4 py-4 flex justify-between w-full top-0 z-50 transition-colors duration-300 ${
+            isScrolled ? "bg-black/80" : "bg-black"
+          }`}
+        >
           <div className='flex flex-row gap-4 items-center'>
             <button
               onClick={() => setShowMobileMenu(!showMobileMenu)}

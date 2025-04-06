@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 
 interface SliderProps {
   sliderHeader: string;
+  media_type: string;
   movieData:
     | {
         id: number;
@@ -15,8 +16,8 @@ interface SliderProps {
     | null;
 }
 
-export default function Slider({ sliderHeader, movieData }: SliderProps) {
-  console.log(movieData);
+export default function Slider({ sliderHeader, media_type, movieData }: SliderProps) {
+  // console.log(movieData);
   const poster_URL = "https://image.tmdb.org/t/p/w500";
 
   const carouselRef = useRef<HTMLDivElement | null>(null);
@@ -92,7 +93,11 @@ export default function Slider({ sliderHeader, movieData }: SliderProps) {
           `}</style>
           {movieData?.map((movie, index) => (
             <Image
-              onClick={() => router.push(`/Series/${movie.id}`)}
+              onClick={() => {
+                media_type === "movie"
+                  ? router.push(`/Movie/${movie.id}`)
+                  : router.push(`/Series/${movie.id}`);
+              }}
               key={movie.title + index}
               src={`${poster_URL}${movie.poster_path}`}
               alt={movie.title}

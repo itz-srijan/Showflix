@@ -56,7 +56,7 @@ const SearchButton = ({ isMobile }: SearchButtonProps) => {
         {isExpanded && (
           <input
             type='text'
-            className='bg-transparent outline-none transition-all duration-300 ease-in-out w-40 sm:w-60 px-2 py-1'
+            className=' text-white bg-transparent outline-none transition-all duration-300 ease-in-out w-40 sm:w-60 px-2 py-1'
             placeholder='Search...'
             value={query}
             onChange={(e) => setQuery(e.target.value)}
