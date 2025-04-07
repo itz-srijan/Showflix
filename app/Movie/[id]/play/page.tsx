@@ -2,13 +2,13 @@
 
 import { useParams } from "next/navigation";
 import Navbar from "@/Components/Navbar";
-export default function play() {
+export default function Play() {
   const params = useParams();
-//   console.log(params);
+  //   console.log(params);
   return (
     <div>
       <Navbar />
-      <div className="pt-10">
+      <div className='pt-10'>
         <iframe
           id='iframe'
           // src={`https://vidsrc.to/embed/movie/${result.id}`}

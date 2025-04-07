@@ -30,7 +30,7 @@ export default function Home() {
         setMovieData(data);
         console.log(data);
       });
-  }, [url]);
+  }, []);
 
   const trendingMovieData = movieData?.results.map((movie) => ({
     backdrop_path: movie.backdrop_path,

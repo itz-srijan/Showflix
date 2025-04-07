@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useRef } from "react";
 import Image from "next/image";
 import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
 import { useRouter } from "next/navigation";
@@ -16,7 +16,11 @@ interface SliderProps {
     | null;
 }
 
-export default function Slider({ sliderHeader, media_type, movieData }: SliderProps) {
+export default function Slider({
+  sliderHeader,
+  media_type,
+  movieData,
+}: SliderProps) {
   // console.log(movieData);
   const poster_URL = "https://image.tmdb.org/t/p/w500";
 
@@ -36,6 +40,13 @@ export default function Slider({ sliderHeader, media_type, movieData }: SliderPr
   };
 
   const router = useRouter();
+  const goToShowDetailsHandler = (id: number) => {
+    if (media_type === "movie") {
+      router.push(`/Movie/${id}`);
+    } else {
+      router.push(`/Series/${id}`);
+    }
+  };
 
   return (
     <div
@@ -45,8 +56,8 @@ export default function Slider({ sliderHeader, media_type, movieData }: SliderPr
         const carousel = carouselRef.current;
         if (carousel) {
           carousel.style.scrollBehavior = "auto";
-          let startX = e.pageX - carousel.offsetLeft;
-          let scrollLeft = carousel.scrollLeft;
+          const startX = e.pageX - carousel.offsetLeft;
+          const scrollLeft = carousel.scrollLeft;
 
           const onMouseMove = (event: MouseEvent) => {
             const x = event.pageX - carousel.offsetLeft;
@@ -91,14 +102,10 @@ export default function Slider({ sliderHeader, media_type, movieData }: SliderPr
               display: none;
             }
           `}</style>
-          {movieData?.map((movie, index) => (
+          {movieData?.map((movie) => (
             <Image
-              onClick={() => {
-                media_type === "movie"
-                  ? router.push(`/Movie/${movie.id}`)
-                  : router.push(`/Series/${movie.id}`);
-              }}
-              key={movie.title + index}
+              onClick={() => goToShowDetailsHandler(movie.id)}
+              key={movie.id}
               src={`${poster_URL}${movie.poster_path}`}
               alt={movie.title}
               draggable={false}

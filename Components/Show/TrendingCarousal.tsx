@@ -1,6 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
-import { RxDotFilled } from "react-icons/rx";
 import { FaPlay, FaPlus } from "react-icons/fa";
 import { useGenre } from "@/context/GenreContext";
 import Image from "next/image";
@@ -22,7 +21,6 @@ export default function TrendingCarousel({ trendingMovieData }: CarouselProps) {
   const IMAGE_URL = "https://image.tmdb.org/t/p/original/";
   const poster_URL = "https://image.tmdb.org/t/p/w500";
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isExpanded, setIsExpanded] = useState(false);
   // console.log(genreList);
   // useEffect(() => {
   //   if (!trendingMovieData || trendingMovieData.length === 0) return; // Ensure effect runs only when trendingMovieData exist
@@ -48,14 +46,15 @@ export default function TrendingCarousel({ trendingMovieData }: CarouselProps) {
 
   //getting genre name from genre id
   const { movieIdToGenre } = useGenre();
-  let genreName: string[] = [];
-  trendingMovieData &&
+  const genreName: string[] = [];
+  if (trendingMovieData && trendingMovieData.length > 0) {
     trendingMovieData[currentIndex].genre_ids.forEach((id) => {
-      let gnr = movieIdToGenre(id);
-
-      gnr.length > 0 && genreName.push(gnr);
+      const gnr = movieIdToGenre(id);
+      if (gnr.length > 0) {
+        genreName.push(gnr);
+      }
     });
-
+  }
   const shortOverview = (overview: string) => {
     return overview.length > 200 ? `${overview.slice(0, 200)}...` : overview;
   };
@@ -64,7 +63,7 @@ export default function TrendingCarousel({ trendingMovieData }: CarouselProps) {
     return <div>No trendingMovieData available</div>;
   }
 
-  let overview = trendingMovieData[currentIndex].overview;
+  const overview = trendingMovieData[currentIndex].overview;
   return (
     <div className='relative'>
       <div

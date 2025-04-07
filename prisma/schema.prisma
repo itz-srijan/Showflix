@@ -20,7 +20,7 @@ model User {
   email String? @unique
   emailVerified DateTime?
   hashedPassword String?
-  provider String
+  provider String?
   createdAt DateTime @default(now())
   updatesAt DateTime @updatedAt
   favoriteIds String[] @db.ObjectId

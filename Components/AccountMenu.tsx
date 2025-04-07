@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
 import { CiLogout } from "react-icons/ci";
 import { MdOutlineFeaturedPlayList } from "react-icons/md";
-import { FaAngleDown, FaAngleUp } from "react-icons/fa";
+import Image from "next/image";
 
 interface AccountMenuProps {
   visible?: boolean;
@@ -42,9 +42,11 @@ const AccountMenu: React.FC<AccountMenuProps> = () => {
         className='flex items-center cursor-pointer'
         onClick={() => setIsExpanded(!isExpanded)}
       >
-        <img
+        <Image
           src={session?.user?.image || "/default-user.png"}
           alt='User Profile'
+          width={40}
+          height={40}
           className='w-10 h-10 rounded-full mr-2 hover:scale-105 transition-transform shadow-md'
         />
       </div>

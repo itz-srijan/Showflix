@@ -21,10 +21,9 @@ export default function Movie() {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const params = useParams();
-  // console.log(params);
-
+  const movieId = params.id as string;
   const apiKey = process.env.NEXT_PUBLIC_TMDB_API_KEY;
-  const movieUrl = `https://api.themoviedb.org/3/movie/${params.id}?language=en-US&api_key=${apiKey}`;
+  const movieUrl = `https://api.themoviedb.org/3/movie/${movieId}?language=en-US&api_key=${apiKey}`;
   const imageUrl = "https://image.tmdb.org/t/p/original";
 
   useEffect(() => {
@@ -112,7 +111,7 @@ export default function Movie() {
         {/* Buttons */}
         <div className='mt-6 flex gap-4'>
           <button
-            onClick={() => router.push(`/Movie/${params.id}/play`)}
+            onClick={() => router.push(`/Movie/${movieId}/Play`)}
             className='flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg text-lg font-semibold'
           >
             <FaPlay /> Play

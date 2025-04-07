@@ -5,6 +5,7 @@ import { useCallback, useState } from "react";
 import axios from "axios";
 import { signIn } from "next-auth/react";
 import GoogleSignInButton from "@/Components/googleSignInButton";
+import Image from "next/image";
 
 const Auth = () => {
   const [email, setEmail] = useState("");
@@ -35,6 +36,7 @@ const Auth = () => {
       });
     } catch (error) {
       alert("An unexpected error occurred.");
+      console.error("Login error:", error);
     } 
     // finally {
     //   setIsLoading(false); // Stop loading
@@ -56,24 +58,24 @@ const Auth = () => {
       });
       console.log("Registration successful:", response.data);
       login(); // Log in the user after registering
-    } catch (error: any) {
-      if (error.response?.status === 422) {
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error) && error.response?.status === 422) {
         alert(error.response.data.error); // Handle "Email taken"
       } else {
         console.error(
           "Unexpected error:",
-          error.response?.data || error.message
+          axios.isAxiosError(error) ? error.response?.data || error.message : error
         );
         alert("An unexpected error occurred. Please try again.");
       }
     }
-  }, [email, name, password]);
+  }, [email, name, password, login]);
 
   return (
     <div className=" relative w-full h-screen bg-[url('/images/hero.jpg')] bg-no-repeat bg-center bg-cover">
       <div className='bg-black w-full h-full md:bg-opacity-40'>
         <nav className='px-12 py-5'>
-          <img src='/images/logo.jpg' alt='Logo' className='h-12' />
+          <Image src='/images/logo.jpg' alt='Logo' className='h-12' width={48} height={48} />
         </nav>
 
         <div className='flex justify-center items-center'>
@@ -83,29 +85,35 @@ const Auth = () => {
             </h2>
 
             <div className='flex flex-col'>
-              {variant === "register" && (
+                {variant === "register" && (
                 <Input
-                  onChange={(ev: any) => setName(ev.target.value)}
+                  onChange={(ev: React.ChangeEvent<HTMLInputElement>) =>
+                  setName(ev.target.value)
+                  }
                   value={name}
                   id='name'
                   type='text'
                   placeholder='name'
                 />
-              )}
-              <Input
-                onChange={(ev: any) => setEmail(ev.target.value)}
+                )}
+                <Input
+                onChange={(ev: React.ChangeEvent<HTMLInputElement>) =>
+                  setEmail(ev.target.value)
+                }
                 value={email}
                 id='email'
                 type='email'
                 placeholder='write your email'
-              />
-              <Input
-                onChange={(ev: any) => setPassword(ev.target.value)}
+                />
+                <Input
+                onChange={(ev: React.ChangeEvent<HTMLInputElement>) =>
+                  setPassword(ev.target.value)
+                }
                 value={password}
                 id='password'
                 type='password'
                 placeholder='Password'
-              />
+                />
 
               <button
                 onClick={variant === "login" ? login : register}

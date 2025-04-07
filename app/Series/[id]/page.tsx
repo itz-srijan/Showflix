@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { FaPlay, FaPlus } from "react-icons/fa";
-import { CiCalendarDate, CiTimer } from "react-icons/ci";
+import { CiCalendarDate } from "react-icons/ci";
 import { useParams } from "next/navigation";
 import { IoMdCloseCircle } from "react-icons/io";
+import Image from "next/image";
 
 export default function Series() {
   interface MovieDetail {
@@ -119,16 +120,18 @@ export default function Series() {
                 key={season.id}
                 onClick={() => {
                   setSeason(season.season_number);
-                  setIsOpen(!isOpen);
-                }}
-                className='relative overflow-hidden rounded-lg group cursor-pointer'
-              >
-                <img
-                  src={`${poster_URL}${season.poster_path}`}
-                  alt={season.name}
-                  draggable={false}
-                  className='w-full h-full rounded-lg transform transition-transform duration-300 group-hover:scale-105'
-                />
+                    setIsOpen(!isOpen);
+                  }}
+                  className='relative overflow-hidden rounded-lg group cursor-pointer'
+                  >
+                  <Image
+                    src={`${poster_URL}${season.poster_path}`}
+                    alt={season.name}
+                    draggable={false}
+                    width={500}
+                    height={750}
+                    className='w-full h-full rounded-lg transform transition-transform duration-300 group-hover:scale-105'
+                  />
                 <div className='absolute inset-0 bg-blue-700/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300'>
                   <div className='text-white text-lg font-semibold'>
                     <p>{season.name}</p>
@@ -166,14 +169,7 @@ export default function Series() {
                 ? `${new Date(movieDetail.first_air_date).toLocaleDateString(
                     "en-US",
                     { year: "numeric" }
-                  )} - ${
-                    movieDetail.status === "Ended"
-                      ? new Date(movieDetail.last_air_date).toLocaleDateString(
-                          "en-US",
-                          { year: "numeric" }
-                        )
-                      : "Continue"
-                  }`
+                  )} - ${endDate(movieDetail.status)}`
                 : seasonData?.air_date
                 ? new Date(seasonData.air_date).toLocaleDateString("en-US", {
                     year: "numeric",

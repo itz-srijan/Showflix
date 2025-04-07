@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 
-const profiles = () => {
+const Profiles = () => {
     const router = useRouter();
     return (
         <div>
@@ -14,4 +14,4 @@ const profiles = () => {
         </div>
     );
 }
-export default profiles;
+export default Profiles;

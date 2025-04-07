@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
 import Slider from "./Slider";
 
 export default function ShowSlider() {

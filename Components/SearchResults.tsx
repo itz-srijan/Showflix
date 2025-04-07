@@ -12,7 +12,7 @@ interface SearchResultsProps {
         profile_path?: string;
       }[]
     | null;
-  mediaType?: String;
+  mediaType?: string;
   isPopular?: boolean;
 }
 const poster_URL = "https://image.tmdb.org/t/p/w300";
@@ -62,12 +62,12 @@ export default function SearchResults({
           .filter((data) => data.media_type === mediaType)
           .map((data) =>
             data == null ? (
-              <div>No search result found in {mediaType}</div>
+              <div key={`no-result-${mediaType}`}>No search result found in {mediaType}</div>
             ) : (
               <div
                 key={data.id}
                 onClick={() => {
-                  let id = data.id;
+                  const id = data.id;
                   switch (data.media_type) {
                     case "movie":
                       router.push(`Movie/${id}`);
@@ -87,11 +87,7 @@ export default function SearchResults({
                       ? `${profile_url}${data.profile_path}`
                       : `${poster_URL}${data.poster_path}`
                     }
-                    alt={
-                    data.profile_path || data.poster_path
-                      ? data.name
-                      : "Image not available"
-                    }
+                    alt="Image not available"
                     draggable={false}
                     width={300}
                     height={450}

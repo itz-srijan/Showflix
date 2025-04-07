@@ -25,7 +25,7 @@ export async function POST(req: Request) {
         name,
         hashedPassword,
         image: "",
-        emailVerified: new Date(),
+        emailVerified: new Date(), // Add the required 'provider' field
       },
     });
 
