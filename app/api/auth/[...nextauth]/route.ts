@@ -48,27 +48,27 @@ const handler = NextAuth({
       },
     }),
   ],
-  callbacks: {
-    async signIn({ user, account }) {
-      if (account?.provider === "google") {
-        const existingUser = await prismadb.user.findUnique({
-          where: { email: user.email! },
-        });
+  // callbacks: {
+  //   async signIn({ user, account }) {
+  //     if (account?.provider === "google") {
+  //       const existingUser = await prismadb.user.findUnique({
+  //         where: { email: user.email! },
+  //       });
 
-        if (!existingUser) {
-          await prismadb.user.create({
-            data: {
-              name: user.name!,
-              email: user.email!,
-              image: user.image!,
-              provider: "google",
-            },
-          });
-        }
-      }
-      return true;
-    },
-  },
+  //       if (!existingUser) {
+  //         await prismadb.user.create({
+  //           data: {
+  //             name: user.name!,
+  //             email: user.email!,
+  //             image: user.image!,
+  //             provider: "google",
+  //           },
+  //         });
+  //       }
+  //     }
+  //     return true;
+  //   },
+  // },
   debug: process.env.NODE_ENV === "development",
   secret: process.env.NEXTAUTH_SECRET,
 });
