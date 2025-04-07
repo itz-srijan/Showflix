@@ -32,7 +32,7 @@ const Auth = () => {
       await signIn("credentials", {
         email,
         password,
-        callbackUrl: "/profiles",
+        callbackUrl: "/Profiles",
       });
     } catch (error) {
       alert("An unexpected error occurred.");
