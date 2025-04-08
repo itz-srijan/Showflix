@@ -4,7 +4,7 @@ const config: Config = {
   darkMode: ["class"],
   content: [
     "./app/**/*.{js,ts,jsx,tsx}", // Ensures Tailwind scans all Next.js app directory files
-    "./components/**/*.{js,ts,jsx,tsx}", // Scans components folder
+    "./Components/**/*.{js,ts,jsx,tsx}", // Scans components folder
     "./pages/**/*.{js,ts,jsx,tsx}", // (Optional) if using pages directory
   ],
   theme: {
