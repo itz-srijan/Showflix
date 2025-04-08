@@ -43,24 +43,24 @@ export default function Series() {
   const [seasonData, setSeasonData] = useState<SeasonData | null>(null);
 
   const params = useParams();
-  //   console.log(params);
+  // console.log(params);
 
   const apiKey = process.env.NEXT_PUBLIC_TMDB_API_KEY;
-  const movieUrl = `https:api.themoviedb.org/3/tv/${params.id}?language=en-US&api_key=${apiKey}`;
+  const seriesURL = `https://api.themoviedb.org/3/tv/${params.id}?language=en-US&api_key=${apiKey}`;
 
-  const seasonUrl = `https:api.themoviedb.org/3/tv/${params.id}/season/${season}?language=en-US&api_key=${apiKey}`;
+  const seasonUrl = `https://api.themoviedb.org/3/tv/${params.id}/season/${season}?language=en-US&api_key=${apiKey}`;
 
   const imageUrl = "https://image.tmdb.org/t/p/original";
   const poster_URL = "https://image.tmdb.org/t/p/w500";
 
   useEffect(() => {
-    fetch(movieUrl)
+    fetch(seriesURL)
       .then((res) => res.json())
       .then((data) => {
         setMovieDetail(data);
         console.log(data);
       });
-  }, [movieUrl]);
+  }, [seriesURL]);
 
   //fetch when user select a season
   useEffect(() => {
