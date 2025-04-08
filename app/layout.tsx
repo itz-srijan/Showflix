@@ -1,6 +1,6 @@
-import "@fontsource/roboto"; /* Default weight */
-import "@fontsource/roboto/400.css"; /* Specify weight if needed */
-import "@fontsource/roboto/700.css"; /* Bold */
+import "@fontsource/roboto";
+import "@fontsource/roboto/400.css";
+import "@fontsource/roboto/700.css";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -28,9 +28,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang='en'>
+    <html lang="en" className="h-full">
+      <head />
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`h-full ${geistSans.variable} ${geistMono.variable} font-roboto antialiased`}
       >
         <Providers>
           <GenreProvider>{children}</GenreProvider>
