@@ -43,7 +43,7 @@ const AccountMenu: React.FC<AccountMenuProps> = () => {
         onClick={() => setIsExpanded(!isExpanded)}
       >
         <Image
-          src={session?.user?.image || "/default-user.png"}
+          src={session?.user?.image || "/images/default-user.png"}
           alt='User Profile'
           width={40}
           height={40}
