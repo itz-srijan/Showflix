@@ -37,7 +37,7 @@ const Auth = () => {
     } catch (error) {
       alert("An unexpected error occurred.");
       console.error("Login error:", error);
-    } 
+    }
     // finally {
     //   setIsLoading(false); // Stop loading
     // }
@@ -58,13 +58,15 @@ const Auth = () => {
       });
       console.log("Registration successful:", response.data);
       login(); // Log in the user after registering
-    } catch (error: unknown) {
+    } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 422) {
         alert(error.response.data.error); // Handle "Email taken"
       } else {
         console.error(
           "Unexpected error:",
-          axios.isAxiosError(error) ? error.response?.data || error.message : error
+          axios.isAxiosError(error)
+            ? error.response?.data || error.message
+            : error
         );
         alert("An unexpected error occurred. Please try again.");
       }
@@ -72,85 +74,98 @@ const Auth = () => {
   }, [email, name, password, login]);
 
   return (
-    <div className=" relative w-full h-screen bg-[url('/images/hero.jpg')] bg-no-repeat bg-center bg-cover">
-      <div className='bg-black w-full h-full md:bg-opacity-40'>
-        <nav className='px-12 py-5'>
-          <Image src='/images/logo.jpg' alt='Logo' className='h-12' width={48} height={48} />
-        </nav>
+    <div className="relative w-full h-screen bg-[url('/images/hero-2.jpg')] bg-no-repeat bg-center bg-cover">
+      {/* Dark overlay */}
+      <div className='absolute inset-0 bg-black/60 z-0' />
 
-        <div className='flex justify-center items-center'>
-          <div className='bg-black bg-opacity-70 px-16 py-16 md:p-12 rounded-lg shadow-lg max-w-md'>
-            <h2 className='text-white text-3xl font-semibold mb-6 text-center'>
-              {variant === "login" ? "Sign in" : "Register"}
-            </h2>
+      {/* Logo */}
+      <div className='absolute top-6 left-6 z-10'>
+        <Image
+          src='/images/logo.jpg'
+          alt='Logo'
+          width={120}
+          height={40}
+          className='w-32 h-auto'
+          priority
+        />
+      </div>
 
-            <div className='flex flex-col'>
-                {variant === "register" && (
-                <Input
-                  onChange={(ev: React.ChangeEvent<HTMLInputElement>) =>
+      {/* Auth Form */}
+      <div className='relative z-10 flex justify-center items-center h-full px-4'>
+        <div className='bg-black bg-opacity-75 backdrop-blur-sm p-10 rounded-xl shadow-xl w-full max-w-xs text-white animate-fade-in'>
+          <h2 className='text-3xl md:text-4xl font-semibold mb-6 text-center'>
+            {variant === "login" ? "Sign In" : "Create an Account"}
+          </h2>
+
+          <div className='flex flex-col space-y-4 w-full'>
+            {variant === "register" && (
+              <Input
+                onChange={(ev: React.ChangeEvent<HTMLInputElement>) =>
                   setName(ev.target.value)
-                  }
-                  value={name}
-                  id='name'
-                  type='text'
-                  placeholder='name'
-                />
-                )}
-                <Input
-                onChange={(ev: React.ChangeEvent<HTMLInputElement>) =>
-                  setEmail(ev.target.value)
                 }
-                value={email}
-                id='email'
-                type='email'
-                placeholder='write your email'
-                />
-                <Input
-                onChange={(ev: React.ChangeEvent<HTMLInputElement>) =>
-                  setPassword(ev.target.value)
-                }
-                value={password}
-                id='password'
-                type='password'
-                placeholder='Password'
-                />
-
-              <button
-                onClick={variant === "login" ? login : register}
-                className='bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded'
-              >
-                {variant === "login" ? "Login" : "Register"}
-              </button>
-
-              <div className='flex flex-row items-center justify-center mt-8'>
-                <GoogleSignInButton />
-              </div>
-            </div>
-
-            {variant === "login" && (
-              <div className='flex justify-between text-gray-400 text-sm mt-4'>
-                <label className='flex items-center space-x-1'>
-                  <input type='checkbox' className='accent-red-600' />
-                  <span>Remember me</span>
-                </label>
-                <a href='#' className='hover:underline'>
-                  Need help?
-                </a>
-              </div>
+                value={name}
+                id='name'
+                type='text'
+                placeholder='Your Name'
+                className='w-full'
+              />
             )}
+            <Input
+              onChange={(ev: React.ChangeEvent<HTMLInputElement>) =>
+                setEmail(ev.target.value)
+              }
+              value={email}
+              id='email'
+              type='email'
+              placeholder='Email Address'
+              className='w-full'
+            />
+            <Input
+              onChange={(ev: React.ChangeEvent<HTMLInputElement>) =>
+                setPassword(ev.target.value)
+              }
+              value={password}
+              id='password'
+              type='password'
+              placeholder='Password'
+              className='w-full'
+            />
 
-            <p className='text-gray-400 mt-6 text-center'>
-              {variant === "login"
-                ? "New to Netflix?"
-                : "Already have account?"}{" "}
-              <span
-                onClick={toggleVariant}
-                className='text-white hover:underline'
-              >
-                {variant === "login" ? "Sign up" : "Login"}
-              </span>
-            </p>
+            <button
+              onClick={variant === "login" ? login : register}
+              className='w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 rounded-lg transition duration-300'
+            >
+              {variant === "login" ? "Login" : "Register"}
+            </button>
+
+            <div className='flex items-center justify-center mt-6 w-full'>
+              <GoogleSignInButton className='w-full rounded-lg' />
+            </div>
           </div>
+
+          {/* {variant === "login" && (
+            <div className='flex justify-between items-center text-sm text-gray-400 mt-6'>
+              <label className='flex items-center space-x-2'>
+                <input type='checkbox' className='accent-red-600' />
+                <span>Remember me</span>
+              </label>
+              <a href='#' className='hover:underline'>
+                Need help?
+              </a>
+            </div>
+          )} */}
+
+          <p className='text-sm text-gray-400 mt-8 text-center'>
+            {variant === "login"
+              ? "New to ShowFlix?"
+              : "Already have an account?"}{" "}
+            <span
+              onClick={toggleVariant}
+              className='text-white hover:underline cursor-pointer font-medium'
+            >
+              {variant === "login" ? "Sign up now" : "Login"}
+            </span>
+          </p>
         </div>
       </div>
     </div>

@@ -3,7 +3,11 @@
 import { signIn } from "next-auth/react";
 import { FcGoogle } from "react-icons/fc";
 
-const GoogleSignInButton = () => {
+interface GoogleSignInButtonProps {
+  className?: string;
+}
+
+const GoogleSignInButton: React.FC<GoogleSignInButtonProps> = ({ className }) => {
   const handleGoogleSignIn = async () => {
     try {
       // Redirect to the root page after login
@@ -17,7 +21,7 @@ const GoogleSignInButton = () => {
   return (
     <div
       onClick={handleGoogleSignIn}
-      className="w-10 h-10 bg-white rounded-full flex items-center justify-center cursor-pointer hover:opacity-80 transition"
+      className={`w-10 h-10 bg-white flex items-center justify-center cursor-pointer hover:opacity-80 transition ${className}`}
     >
       <FcGoogle size={30} />
     </div>
