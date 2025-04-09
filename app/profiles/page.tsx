@@ -120,7 +120,7 @@ export default function Profiles() {
           <div className='text-xs leading-relaxed text-center md:text-left text-zinc-500 space-y-2'>
             <p>
               This product uses the TMDb API but is not endorsed or certified by
-              TMDb. All copyrights are owned by Disney.
+              TMDb.
             </p>
             <p>
               This site does not store any files on our servers — all content is

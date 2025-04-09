@@ -105,7 +105,7 @@ export default function TrendingCarousel({ trendingMovieData }: CarouselProps) {
               <FaPlay /> Trailer
             </button>
             <button className='flex items-center justify-center gap-2 bg-red-600 hover:bg-red-800 text-white w-36 h-11 rounded-xl text-sm lg:text-base font-semibold shadow-lg transition-all duration-300 hover:scale-105'>
-              <FaPlus /> My List
+              <FaPlus /> Add to List
             </button>
           </div>
         </div>

@@ -3,8 +3,9 @@
 import { useEffect, useState } from "react";
 import { FaPlay, FaPlus } from "react-icons/fa";
 import { CiCalendarDate, CiTimer } from "react-icons/ci";
-import { useParams } from "next/navigation";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import Navbar from "@/Components/Navbar";
+import Image from "next/image";
 
 export default function Movie() {
   interface MovieDetail {
@@ -19,12 +20,15 @@ export default function Movie() {
 
   const [movieDetail, setMovieDetail] = useState<MovieDetail | null>(null);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [logos, setLogos] = useState<{ file_path: string; iso_639_1: string }[]>([]);
 
   const params = useParams();
   const movieId = params.id as string;
   const apiKey = process.env.NEXT_PUBLIC_TMDB_API_KEY;
-  const movieUrl = `https://api.themoviedb.org/3/movie/${movieId}?language=en-US&api_key=${apiKey}`;
+  const movieUrl = `https://api.themoviedb.org/3/movie/${movieId}?language=en-US&api_key=${apiKey}&append_to_response=image&language=en-US`;
+  const backdropsUrl = `https://api.themoviedb.org/3/movie/${movieId}/images?api_key=${apiKey}`;
   const imageUrl = "https://image.tmdb.org/t/p/original";
+  const LOGO_URL = "https://image.tmdb.org/t/p/w500";
 
   useEffect(() => {
     fetch(movieUrl)
@@ -35,9 +39,22 @@ export default function Movie() {
       });
   }, [movieUrl]);
 
+  useEffect(() => {
+    fetch(backdropsUrl)
+      .then((res) => res.json())
+      .then((data) => {
+        setLogos(data.logos);
+        // console.log(data);
+      });
+  }, [backdropsUrl]);
+
+  const logo = logos.find((logo) => logo.iso_639_1 === "en");
+  console.log(logo);
+
   const router = useRouter();
 
-  if (!movieDetail) return <div>Loading...</div>;
+  if (!movieDetail)
+    return <div className='text-white text-center mt-10'>Loading...</div>;
 
   const bgUrl = `${imageUrl}${movieDetail.backdrop_path}`;
   const shortOverview =
@@ -47,81 +64,141 @@ export default function Movie() {
 
   return (
     <div
-      className='relative w-full h-screen bg-cover bg-center text-white font-roboto'
-      style={{
-        backgroundImage: `url(${bgUrl})`,
-      }}
+      className='relative w-full min-h-screen bg-cover bg-center text-white'
+      style={{ backgroundImage: `url(${bgUrl})` }}
     >
       {/* Overlay */}
-      <div className='absolute inset-0 bg-black bg-opacity-60'></div>
+      <div className='absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent'></div>
+      <Navbar />
 
       {/* Content */}
-      <div className='relative z-10 flex flex-col justify-center h-full p-10 max-w-2xl'>
-        <h1 className='text-5xl font-bold'>{movieDetail.title}</h1>
-        <div className='flex flex-row items-center gap-4 mt-2'>
-          {/* Release date */}
-          <div className='flex flex-row items-center'>
-            <CiCalendarDate />
-            <p className='p-1 text-blue-200'>
-              {new Date(movieDetail.release_date).toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "long",
-                day: "2-digit",
-              })}
-            </p>
-          </div>
-
-          {/* Runtime */}
-          <div className='flex flex-row items-center'>
-            <CiTimer />
-            <p className='p-1 text-blue-200'>
-              {(() => {
-                const hours = Math.floor(movieDetail.runtime / 60);
-                const mins = movieDetail.runtime % 60;
-                return `${hours}h ${mins}m`;
-              })()}
-            </p>
-          </div>
-        </div>
-
-        {/* Genres */}
-        <div className='mt-3 flex gap-2'>
-          {movieDetail.genres.map((genre) => (
-            <span
-              key={genre.id}
-              className='bg-red-900 px-3 py-1 rounded-full text-sm'
-            >
-              {genre.name}
-            </span>
-          ))}
-        </div>
-        {/* Overview */}
-        <p className='text-lg text-white text-pretty mt-4 italic'>
-          {isExpanded ? movieDetail.overview : shortOverview}
-          {movieDetail.overview.length > 150 && (
-            <button
-              onClick={() => setIsExpanded(!isExpanded)}
-              className='text-white-500 ml-2 bg-blue-600 p-1 rounded-sm text-sm hover:bg-blue-800'
-            >
-              {isExpanded ? "Show Less" : "Read More"}
-            </button>
+      <div className='mt-7 relative z-10 flex flex-col justify-center min-h-screen p-6 sm:p-10 md:p-16 max-w-4xl'>
+        <div className='max-w-3xl'>
+          {logo ? (
+            <Image
+              src={`${LOGO_URL}${logo.file_path}`}
+              alt={movieDetail.title}
+              priority={true}
+              width={350}
+              height={200}
+              objectFit='contain'
+              className="mb-4"
+            />
+          ) : (
+            <h1 className='text-3xl sm:text-4xl md:text-5xl font-bold'>
+              {movieDetail.title}
+            </h1>
           )}
-        </p>
 
-        {/* Buttons */}
-        <div className='mt-6 flex gap-4'>
-          <button
-            onClick={() => router.push(`/Movie/${movieId}/Play`)}
-            className='flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg text-lg font-semibold'
-          >
-            <FaPlay /> Play
-          </button>
-          <button className='flex items-center gap-2 bg-gray-600 hover:bg-gray-800 text-white px-6 py-3 rounded-lg text-lg font-semibold'>
-            <FaPlay /> Trailer
-          </button>
-          <button className='flex items-center gap-2 bg-red-600 hover:bg-red-800 text-white px-6 py-3 rounded-lg text-lg font-semibold'>
-            <FaPlus /> Add to Watchlist
-          </button>
+          <div className='flex flex-wrap items-center gap-6 text-blue-200 text-sm sm:text-base mb-4'>
+            {/* Release date */}
+            <div className='flex items-center gap-2'>
+              <CiCalendarDate size={20} />
+              <span>
+                {new Date(movieDetail.release_date).toLocaleDateString(
+                  "en-US",
+                  {
+                    year: "numeric",
+                    month: "long",
+                    day: "2-digit",
+                  }
+                )}
+              </span>
+            </div>
+
+            {/* Runtime */}
+            <div className='flex items-center gap-2'>
+              <CiTimer size={20} />
+              <span>
+                {(() => {
+                  const hours = Math.floor(movieDetail.runtime / 60);
+                  const mins = movieDetail.runtime % 60;
+                  return `${hours}h ${mins}m`;
+                })()}
+              </span>
+            </div>
+          </div>
+
+          {/* Genres */}
+          <div className='flex flex-wrap gap-2 mb-6'>
+            {movieDetail.genres.map((genre) => (
+              <span
+                key={genre.id}
+                className='bg-red-800/80 text-white px-3 py-1 rounded-full text-xs sm:text-sm shadow-md'
+              >
+                {genre.name}
+              </span>
+            ))}
+          </div>
+
+          {/* Overview */}
+          <div className='mb-6'>
+            <p className='text-base sm:text-lg text-white/90 leading-relaxed text-pretty italic'>
+              {isExpanded ? movieDetail.overview : shortOverview}
+            </p>
+            {movieDetail.overview.length > 150 && (
+              <div className='mt-2'>
+                <button
+                  onClick={() => setIsExpanded(!isExpanded)}
+                  className='bg-blue-600 hover:bg-blue-700 text-white px-4 py-1.5 rounded-md text-sm font-medium shadow-sm transition'
+                >
+                  {isExpanded ? "Show Less" : "Read More"}
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Buttons */}
+          <div className='mt-4 flex flex-wrap gap-4'>
+            <button
+              onClick={() => router.push(`/Movie/${movieId}/Play`)}
+              className='flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg text-sm sm:text-base font-semibold shadow-md transition-transform hover:scale-105'
+            >
+              <FaPlay /> Play
+            </button>
+
+            <button className='flex items-center gap-2 bg-gray-700 hover:bg-gray-800 text-white px-6 py-2.5 rounded-lg text-sm sm:text-base font-semibold shadow-md transition-transform hover:scale-105'>
+              <FaPlay /> Trailer
+            </button>
+
+            <button className='flex items-center gap-2 bg-red-600 hover:bg-red-800 text-white px-6 py-2.5 rounded-lg text-sm sm:text-base font-semibold shadow-md transition-transform hover:scale-105'>
+              <FaPlus /> Watchlist
+            </button>
+          </div>
+
+          {/* Movie Scenes
+          {backdrops.length > 0 && (
+            <div className='mt-16'>
+              <h2 className='text-2xl font-bold text-white mb-6'>
+                Scenes from the Movie
+              </h2>
+
+              <div className='relative'>
+                <div
+                  className='flex gap-5 overflow-x-auto pb-2'
+                  style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+                >
+                  <style jsx>{`
+                    div::-webkit-scrollbar {
+                      display: none;
+                    }
+                  `}</style>
+                  {backdrops.slice(0, 10).map((img, index) => (
+                    <div
+                      key={index}
+                      className='min-w-[280px] sm:min-w-[360px] h-[200px] rounded-2xl overflow-hidden shadow-xl transform hover:scale-105 transition duration-300 ease-in-out'
+                    >
+                      <img
+                        src={`https://image.tmdb.org/t/p/w780${img.file_path}`}
+                        alt={`Scene ${index + 1}`}
+                        className='w-full h-full object-cover'
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )} */}
         </div>
       </div>
     </div>
