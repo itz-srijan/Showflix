@@ -5,6 +5,7 @@ import { FaPlay, FaPlus } from "react-icons/fa";
 import { CiCalendarDate } from "react-icons/ci";
 import { useParams } from "next/navigation";
 import { IoMdCloseCircle } from "react-icons/io";
+import Navbar from "@/Components/Navbar";
 import Image from "next/image";
 
 export default function Series() {
@@ -29,9 +30,7 @@ export default function Series() {
   interface SeasonData {
     name: string;
     air_date: string;
-    episodes: {
-      name: string;
-    }[];
+    episodes: { name: string; episode_number: number; still_path: string }[];
     season_number: number;
     overview: string;
   }
@@ -43,13 +42,9 @@ export default function Series() {
   const [seasonData, setSeasonData] = useState<SeasonData | null>(null);
 
   const params = useParams();
-  // console.log(params);
-
   const apiKey = process.env.NEXT_PUBLIC_TMDB_API_KEY;
   const seriesURL = `https://api.themoviedb.org/3/tv/${params.id}?language=en-US&api_key=${apiKey}`;
-
   const seasonUrl = `https://api.themoviedb.org/3/tv/${params.id}/season/${season}?language=en-US&api_key=${apiKey}`;
-
   const imageUrl = "https://image.tmdb.org/t/p/original";
   const poster_URL = "https://image.tmdb.org/t/p/w500";
 
@@ -58,11 +53,9 @@ export default function Series() {
       .then((res) => res.json())
       .then((data) => {
         setMovieDetail(data);
-        console.log(data);
       });
   }, [seriesURL]);
 
-  //fetch when user select a season
   useEffect(() => {
     if (season > 0) {
       fetch(seasonUrl)
@@ -74,68 +67,67 @@ export default function Series() {
     }
   }, [seasonUrl, season]);
 
-  if (!movieDetail) return <div>Loading...</div>;
+  if (!movieDetail)
+    return <div className='text-white text-center mt-10'>Loading...</div>;
 
   const bgUrl = `${imageUrl}${movieDetail.backdrop_path}`;
+  const shortOverview = (overview: string) =>
+    overview.length > 150 ? `${overview.slice(0, 200)}...` : overview;
 
-  const shortOverview = (overview: string) => {
-    return overview.length > 150 ? `${overview.slice(0, 200)}...` : overview;
-  };
+  const endDate = (status: string) =>
+    status === "Ended"
+      ? new Date(movieDetail.last_air_date).toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "long",
+        })
+      : "Continuing";
 
-  const endDate = (status: string) => {
-    if (status === "Ended")
-      return new Date(movieDetail.last_air_date).toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "long",
-      });
-    else return "continuing";
-  };
-
-  //to show seasons
   if (isOpen && movieDetail.number_of_seasons > 1) {
     return (
       <div
-        className='relative w-full h-screen bg-cover bg-center text-white font-roboto'
-        onClick={() => setIsOpen(!isOpen)}
+        className='fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm'
         style={{
           backgroundImage: `url(${bgUrl})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
         }}
       >
-        <button
-          className='absolute text-red-500 rounded-full flex items-center justify-center'
-          onClick={() => setIsOpen(!isOpen)}
-        >
-          <IoMdCloseCircle className='top-2 right-2 m-4 w-10 h-10 fixed' />
-        </button>
-        <div className='absolute top-[10%] left-[10%] right-[10%] bottom-[10%] bg-black bg-opacity-80 rounded-2xl p-4 overflow-y-scroll'>
-          <style jsx>{`
-            div::-webkit-scrollbar {
-              display: none;
-            }
-          `}</style>
+        <div className='relative z-10 w-[90%] max-w-6xl max-h-[90vh] bg-black/60 backdrop-blur-md text-white rounded-2xl shadow-2xl p-8 overflow-y-auto'>
+          {/* Close Button */}
+          <button
+            onClick={() => setIsOpen(false)}
+            className='absolute top-4 right-4 text-red-500 hover:text-red-700 transition-colors'
+          >
+            <IoMdCloseCircle size={36} />
+          </button>
 
-          <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4'>
-            {movieDetail.seasons.slice(1).map((season) => (
+          {/* Heading */}
+          <h2 className='text-3xl font-bold mb-6 text-center'>
+            Select a Season
+          </h2>
+
+          {/* Season Grid */}
+          <div className='grid gap-6 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5'>
+            {movieDetail.seasons.slice(1).map((s) => (
               <div
-                key={season.id}
+                key={s.id}
                 onClick={() => {
-                  setSeason(season.season_number);
-                    setIsOpen(!isOpen);
-                  }}
-                  className='relative overflow-hidden rounded-lg group cursor-pointer'
-                  >
-                  <Image
-                    src={`${poster_URL}${season.poster_path}`}
-                    alt={season.name}
-                    draggable={false}
-                    width={500}
-                    height={750}
-                    className='w-full h-full rounded-lg transform transition-transform duration-300 group-hover:scale-105'
-                  />
-                <div className='absolute inset-0 bg-blue-700/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300'>
-                  <div className='text-white text-lg font-semibold'>
-                    <p>{season.name}</p>
-                  </div>
+                  setSeason(s.season_number);
+                  setIsOpen(false);
+                }}
+                className='relative cursor-pointer rounded-lg overflow-hidden group transition-transform hover:scale-105'
+              >
+                <Image
+                  src={`${poster_URL}${s.poster_path}`}
+                  alt={s.name}
+                  width={300}
+                  height={450}
+                  className='rounded-lg'
+                />
+                <div className='absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300'>
+                  <span className='text-white font-semibold text-center text-sm'>
+                    {s.name}
+                  </span>
                 </div>
               </div>
             ))}
@@ -144,110 +136,143 @@ export default function Series() {
       </div>
     );
   }
+
   return (
     <div
-      className='relative w-full h-screen bg-cover bg-center text-white font-roboto'
-      style={{
-        backgroundImage: `url(${bgUrl})`,
-      }}
+      className='relative w-full min-h-screen bg-cover bg-center text-white'
+      style={{ backgroundImage: `url(${bgUrl})` }}
     >
       {/* Overlay */}
-      <div className='absolute inset-0 bg-black bg-opacity-50'></div>
-
+      <div className='absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent'></div>
+      <Navbar />
       {/* Content */}
-      <div className='relative z-10 flex flex-col justify-center h-full p-10 max-w-2xl'>
-        <h1 className='text-5xl font-bold'>
+      <div className='mt-7 relative z-10 flex flex-col justify-center min-h-screen px-6 py-2 sm:p-10 md:p-16 max-w-4xl'>
+        <h1 className='text-4xl sm:text-5xl font-extrabold drop-shadow-lg mb-4'>
           {movieDetail.name}
-          {season > 0 && " - " + seasonData?.name}
+          {season > 0 && ` - ${seasonData?.name}`}
         </h1>
-        <div className='flex flex-row items-center gap-4 mt-2'>
-          {/* Release date */}
-          <div className='flex flex-row items-center'>
-            <CiCalendarDate />
-            <p className='p-1 text-blue-200'>
+
+        {/* Date and Seasons Info */}
+        <div className='flex flex-wrap items-center gap-6 text-blue-200 text-sm sm:text-base mb-4'>
+          <div className='flex items-center gap-2'>
+            <CiCalendarDate size={20} />
+            <span>
               {season === 0
-                ? `${new Date(movieDetail.first_air_date).toLocaleDateString(
-                    "en-US",
-                    { year: "numeric" }
-                  )} - ${endDate(movieDetail.status)}`
+                ? `${new Date(
+                    movieDetail.first_air_date
+                  ).getFullYear()} - ${endDate(movieDetail.status)}`
                 : seasonData?.air_date
                 ? new Date(seasonData.air_date).toLocaleDateString("en-US", {
                     year: "numeric",
                     month: "long",
                   })
                 : ""}
-            </p>
+            </span>
           </div>
-
-          {/* Seasons */}
-          <div className='flex flex-row items-center'>
-            <div className='flex flex-row items-center p-1'>
-              <p className='p-1'>
-                {season == 0 ? "Seasons : " : " Episodes :"}
-              </p>
-            </div>
-            <p className='p-1 text-blue-200'>
-              {season == 0
+          <div className='flex items-center gap-2'>
+            <span>{season === 0 ? "Seasons:" : "Episodes:"}</span>
+            <span className='text-white'>
+              {season === 0
                 ? movieDetail.number_of_seasons
                 : seasonData?.episodes.length}
-            </p>
+            </span>
           </div>
         </div>
 
         {/* Genres */}
-        <div className='mt-3 flex gap-2'>
+        <div className='flex flex-wrap gap-2 mb-4'>
           {movieDetail.genres.map((genre) => (
             <span
               key={genre.id}
-              className='bg-red-900 px-3 py-1 rounded-full text-sm'
+              className='bg-red-800/80 px-3 py-1 rounded-full text-sm shadow-md'
             >
               {genre.name}
             </span>
           ))}
         </div>
+
         {/* Overview */}
+
         {(() => {
-          const overview = season == 0 ? movieDetail.overview : seasonData?.overview;
+          const overview =
+            season === 0 ? movieDetail.overview : seasonData?.overview;
           return (
-            <p className=' text-white text-pretty mt-4 italic font-light'>
-              {isExpanded ? overview : shortOverview(overview || "")}
+            <div className='mb-6'>
+              <p className='text-base sm:text-lg text-white/90 leading-relaxed text-pretty italic mb-2'>
+                {isExpanded ? overview : shortOverview(overview || "")}
+              </p>
               {overview && overview.length > 150 && (
                 <button
                   onClick={() => setIsExpanded(!isExpanded)}
-                  className='text-white-500 ml-2 bg-blue-600 p-1 rounded-sm text-sm hover:bg-blue-800'
+                  className='bg-blue-600 hover:bg-blue-700 text-white px-4 py-1.5 rounded-md text-sm font-medium shadow-sm transition'
                 >
                   {isExpanded ? "Show Less" : "Read More"}
                 </button>
               )}
-            </p>
+            </div>
           );
         })()}
 
-        {/* Buttons */}
-        <div className='mt-6 flex flex-wrap gap-4 items-center font-roboto'>
-          {/* Season button */}
+        {/* Action Buttons */}
+        <div className='mt-4 mb-0 flex flex-wrap gap-4'>
           {movieDetail.number_of_seasons > 1 && (
-            <div
-              onClick={() => setIsOpen(!isOpen)}
-              className='flex items-center justify-center gap-2 bg-green-600 hover:bg-green-800 text-white px-6 py-3 rounded-lg text-lg font-semibold cursor-pointer h-12 w-full sm:w-auto'
+            <button
+              onClick={() => setIsOpen(true)}
+              className='bg-green-600 hover:bg-green-800 px-6 py-2.5 rounded-lg font-semibold text-white transition-transform hover:scale-105'
             >
               Seasons
-            </div>
+            </button>
           )}
-          {/* Play Button */}
-          <button className='flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-800 text-white px-6 py-3 rounded-lg text-lg font-semibold h-12 w-full sm:w-auto'>
-            <FaPlay /> {season == 0 ? "S1 E1" : "Play E1"}
+          <button className='bg-blue-600 hover:bg-blue-800 px-6 py-2.5 rounded-lg font-semibold text-white flex items-center gap-2 transition-transform hover:scale-105'>
+            <FaPlay /> {season === 0 ? "S1 E1" : "Play E1"}
           </button>
-          {/* Trailer Button */}
-          <button className='flex items-center justify-center gap-2 bg-gray-700 hover:bg-gray-800 text-white px-6 py-3 rounded-lg text-lg font-semibold h-12 w-full sm:w-auto'>
+          <button className='bg-gray-700 hover:bg-gray-800 px-6 py-2.5 rounded-lg font-semibold text-white flex items-center gap-2 transition-transform hover:scale-105'>
             <FaPlay /> Trailer
           </button>
-          {/* Add to Watchlist */}
-          <button className='flex items-center justify-center gap-2 bg-red-600 hover:bg-red-800 text-white px-6 py-3 rounded-lg text-lg font-semibold h-12 w-full sm:w-auto'>
-            <FaPlus />
+          <button className='bg-red-600 hover:bg-red-800 px-6 py-2.5 rounded-lg font-semibold text-white flex items-center gap-2 transition-transform hover:scale-105'>
+            <FaPlus /> Watchlist
           </button>
         </div>
       </div>
+      {/* episodes */}
+      {season > 0 && (
+        <div className='relative z-30 w-full mt-[-4rem] px-4 sm:px-10'>
+          <h2 className='text-3xl font-bold text-white text-left mb-4'>
+            Episodes :
+          </h2>
+          <div className='flex justify-center'>
+            <div
+              className='flex gap-6 overflow-x-auto pb-2'
+              style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+            >
+              <style jsx>{`
+                div::-webkit-scrollbar {
+                  display: none;
+                }
+              `}</style>
+              {seasonData?.episodes.map((ep) => (
+                <div
+                  key={ep.episode_number}
+                  className='relative min-w-[240px] sm:min-w-[300px] h-[190px] rounded-2xl overflow-hidden shadow-xl group cursor-pointer'
+                >
+                  <img
+                    src={`https://image.tmdb.org/t/p/w780${ep.still_path}`}
+                    alt={ep.name}
+                    className='w-full h-full object-cover transition-transform duration-300 group-hover:scale-105'
+                  />
+                  {/* Overlay */}
+                  <div className='absolute inset-0 bg-black/50 flex flex-col justify-center items-center px-2 text-center text-white transition-opacity duration-300'>
+                    <span className='text-lg font-bold mb-1'>
+                      Episode {ep.episode_number}
+                    </span>
+                    <span className='text-sm line-clamp-2'>{ep.name}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -165,40 +165,6 @@ export default function Movie() {
               <FaPlus /> Watchlist
             </button>
           </div>
-
-          {/* Movie Scenes
-          {backdrops.length > 0 && (
-            <div className='mt-16'>
-              <h2 className='text-2xl font-bold text-white mb-6'>
-                Scenes from the Movie
-              </h2>
-
-              <div className='relative'>
-                <div
-                  className='flex gap-5 overflow-x-auto pb-2'
-                  style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-                >
-                  <style jsx>{`
-                    div::-webkit-scrollbar {
-                      display: none;
-                    }
-                  `}</style>
-                  {backdrops.slice(0, 10).map((img, index) => (
-                    <div
-                      key={index}
-                      className='min-w-[280px] sm:min-w-[360px] h-[200px] rounded-2xl overflow-hidden shadow-xl transform hover:scale-105 transition duration-300 ease-in-out'
-                    >
-                      <img
-                        src={`https://image.tmdb.org/t/p/w780${img.file_path}`}
-                        alt={`Scene ${index + 1}`}
-                        className='w-full h-full object-cover'
-                      />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )} */}
         </div>
       </div>
     </div>
