@@ -11,7 +11,7 @@ export default function Profiles() {
   const { data: session } = useSession();
 
   return (
-    <main className="relative min-h-screen w-full bg-[url('/images/profilebg.jpg')] bg-no-repeat bg-center bg-cover text-white flex flex-col">
+    <main className="relative min-h-screen w-full bg-[url('/images/profile_bg.jpg')] bg-no-repeat bg-center bg-cover text-white flex flex-col">
       {/* Header */}
       <header className='flex justify-between items-center px-6 py-4 bg-black/50 backdrop-blur-md shadow-md z-10'>
         <Image

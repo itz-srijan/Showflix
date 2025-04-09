@@ -74,7 +74,7 @@ const Auth = () => {
   }, [email, name, password, login]);
 
   return (
-    <div className="relative w-full h-screen bg-[url('/images/hero-2.jpg')] bg-no-repeat bg-center bg-cover">
+    <div className="relative w-full h-screen bg-[url('/images/hero.jpg')] bg-no-repeat bg-center bg-cover">
       {/* Dark overlay */}
       <div className='absolute inset-0 bg-black/60 z-0' />
 
