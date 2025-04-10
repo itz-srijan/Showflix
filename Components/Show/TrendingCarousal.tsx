@@ -52,10 +52,8 @@ export default function TrendingCarousel({ trendingMovieData }: CarouselProps) {
     });
   }
 
-  const goToShowDetailsHandler = (id: number) => {
-    router.push(
-      currentMovie.media_type === "movie" ? `/Movie/${id}` : `/Series/${id}`
-    );
+  const goToShowDetailsHandler = (id: number, media_type: string) => {
+    router.push(media_type === "movie" ? `/Movie/${id}` : `/Series/${id}`);
   };
 
   const shortOverview = (overview: string) => {
@@ -109,7 +107,10 @@ export default function TrendingCarousel({ trendingMovieData }: CarouselProps) {
           <div className='flex flex-wrap items-center gap-4 mt-4'>
             <button
               onClick={() => {
-                goToShowDetailsHandler(currentMovie.id);
+                goToShowDetailsHandler(
+                  currentMovie.id,
+                  currentMovie.media_type
+                );
               }}
               className='flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white w-36 h-11 rounded-xl text-sm lg:text-base font-semibold shadow-lg transition-all duration-300 hover:scale-105'
             >
@@ -147,7 +148,7 @@ export default function TrendingCarousel({ trendingMovieData }: CarouselProps) {
               <div
                 key={index}
                 onClick={() => {
-                  goToShowDetailsHandler(movie.id);
+                  goToShowDetailsHandler(movie.id, movie.media_type);
                 }}
                 className='w-24 h-36 mr-3 flex-shrink-0 bg-white rounded-lg overflow-hidden shadow-lg border border-gray-200 hover:scale-110 transition-transform duration-300'
               >
