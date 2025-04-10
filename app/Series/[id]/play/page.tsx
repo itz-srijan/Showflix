@@ -2,7 +2,8 @@
 
 import { useParams, useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import Navbar from "@/Components/Navbar";
+import Image from "next/image";
+
 
 export default function Play() {
   interface SeasonData {
@@ -74,23 +75,25 @@ export default function Play() {
             `}</style>
 
             {seasonData?.episodes.map((ep) => (
-              <div
+                <div
                 onClick={() => handleEpisodeClick(ep.episode_number)}
                 key={ep.episode_number}
                 className='relative min-w-[160px] sm:min-w-[200px] h-[120px] rounded-xl overflow-hidden shadow-md group cursor-pointer'
-              >
-                <img
+                >
+                <Image
                   src={`https://image.tmdb.org/t/p/w500${ep.still_path}`}
                   alt={ep.name}
+                  width={200}
+                  height={120}
                   className='w-full h-full object-cover transition-transform duration-300 group-hover:scale-105'
                 />
                 <div className='absolute inset-0 bg-black/50 flex flex-col justify-center items-center px-2 text-center text-white transition-opacity duration-300'>
                   <span className='text-sm font-semibold mb-1'>
-                    Episode {ep.episode_number}
+                  Episode {ep.episode_number}
                   </span>
                   <span className='text-xs line-clamp-2'>{ep.name}</span>
                 </div>
-              </div>
+                </div>
             ))}
           </div>
         </div>

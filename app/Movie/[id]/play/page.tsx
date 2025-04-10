@@ -1,7 +1,6 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import Navbar from "@/Components/Navbar";
 export default function Play() {
   const params = useParams();
   //   console.log(params);

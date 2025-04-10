@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import SearchResults from "@/Components/SearchResults";
-import { MdPersonSearch } from "react-icons/md";
 import Navbar from "@/Components/Navbar";
 
 interface SearchData {
@@ -11,7 +10,7 @@ interface SearchData {
     media_type: string;
     id: number;
     poster_path: string;
-    name: string;
+    title: string;
     popularity: number;
     vote_count: number;
     profile_path?: string;
@@ -25,7 +24,6 @@ const SearchClient: React.FC = () => {
   const searchUrl = `https://api.themoviedb.org/3/search/multi?query=${query}&include_adult=false&language=en-US&page=1&api_key=${apiKey}`;
 
   const [searchData, setSearchData] = useState<SearchData | null>(null);
-  const [isFilterOn, setIsFilterOn] = useState(false);
 
   useEffect(() => {
     if (!query) return;
@@ -33,8 +31,9 @@ const SearchClient: React.FC = () => {
       .then((res) => res.json())
       .then((data) => {
         setSearchData(data);
+        console.log(data);
       });
-  }, [searchUrl,query]);
+  }, [searchUrl, query]);
 
   searchData?.results.sort(
     (a, b) => b.popularity * b.vote_count - a.popularity * a.vote_count
@@ -48,37 +47,19 @@ const SearchClient: React.FC = () => {
           <div className='text-4xl font-semibold'>
             Search Results for: {query}
           </div>
-          <div
-            onClick={() => setIsFilterOn(!isFilterOn)}
-            className='cursor-pointer'
-          >
-            <button className='px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition'>
-              <MdPersonSearch className='h-7 w-7' />
-            </button>
-          </div>
         </div>
 
-        {isFilterOn ? (
+        <div>
           <SearchResults
             results={searchData?.results ?? null}
-            mediaType='person'
+            isPopular={true}
           />
-        ) : (
-          <>
-            <SearchResults
-              results={searchData?.results ?? null}
-              isPopular={true}
-            />
-            <SearchResults
-              results={searchData?.results ?? null}
-              mediaType='movie'
-            />
-            <SearchResults
-              results={searchData?.results ?? null}
-              mediaType='tv'
-            />
-          </>
-        )}
+          <SearchResults
+            results={searchData?.results ?? null}
+            mediaType='movie'
+          />
+          <SearchResults results={searchData?.results ?? null} mediaType='tv' />
+        </div>
       </div>
     </div>
   );

@@ -6,7 +6,6 @@ import { CiCalendarDate } from "react-icons/ci";
 import { useParams } from "next/navigation";
 import { IoMdCloseCircle } from "react-icons/io";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import Navbar from "@/Components/Navbar";
 
 export default function Series() {
@@ -48,8 +47,6 @@ export default function Series() {
   const seasonUrl = `https://api.themoviedb.org/3/tv/${params.id}/season/${season}?language=en-US&api_key=${apiKey}`;
   const imageUrl = "https://image.tmdb.org/t/p/original";
   const poster_URL = "https://image.tmdb.org/t/p/w500";
-
-  const router = useRouter();
 
   useEffect(() => {
     fetch(seriesURL)
@@ -233,7 +230,10 @@ export default function Series() {
             </button>
           )}
           <button
-            onClick={() => seasonData && handleOpenPlayer(params.id, season, 1)}
+            onClick={() => {
+              if (season === 0) handleOpenPlayer(params.id, 1, 1);
+              else handleOpenPlayer(params.id, season, 1);
+            }}
             className='bg-blue-600 hover:bg-blue-800 px-6 py-2.5 rounded-lg font-semibold text-white flex items-center gap-2 transition-transform hover:scale-105'
           >
             <FaPlay /> {season === 0 ? "S1 E1" : "Play E1"}
@@ -270,9 +270,11 @@ export default function Series() {
                   key={ep.episode_number}
                   className='relative min-w-[240px] sm:min-w-[300px] h-[190px] rounded-2xl overflow-hidden shadow-xl group cursor-pointer'
                 >
-                  <img
+                  <Image
                     src={`https://image.tmdb.org/t/p/w780${ep.still_path}`}
                     alt={ep.name}
+                    width={780}
+                    height={439}
                     className='w-full h-full object-cover transition-transform duration-300 group-hover:scale-105'
                   />
                   {/* Overlay */}

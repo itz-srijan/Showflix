@@ -18,6 +18,7 @@ export default function Home() {
       genre_ids: number[];
       overview: string;
       media_type: string;
+      id: number;
     }[];
   }
 
@@ -39,6 +40,7 @@ export default function Home() {
     genre_ids: movie.genre_ids,
     overview: movie.overview,
     media_type: movie.media_type,
+    id: movie.id,
   }));
 
   return (

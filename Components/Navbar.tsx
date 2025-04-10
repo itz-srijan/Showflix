@@ -6,10 +6,12 @@ import { IoMenu } from "react-icons/io5";
 import { FaChevronLeft } from "react-icons/fa6";
 import { useEffect, useState } from "react";
 import MobileMenu from "./MobileMenu";
+import { useRouter } from "next/navigation";
 
 export default function Navbar() {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -18,7 +20,7 @@ export default function Navbar() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-  
+
   return (
     <div>
       <nav className='w-screen z-50 fixed'>
@@ -51,7 +53,7 @@ export default function Navbar() {
           {/* Centered Nav Items + Search */}
           <div className='hidden lg:flex flex-1 justify-center'>
             <div className='flex flex-row gap-6 items-center text-sm font-medium text-zinc-300'>
-              <NavbarItem label='Home' />
+              <NavbarItem onClick={() => router.push("/")} label='Home' />
               <NavbarItem label='Movies' />
               <NavbarItem label='Series' />
               <NavbarItem label='Popular' />

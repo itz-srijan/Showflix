@@ -2,6 +2,7 @@ import { useState } from "react";
 import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
 import { FaPlay, FaPlus } from "react-icons/fa";
 import { useGenre } from "@/context/GenreContext";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 
 interface CarouselProps {
@@ -13,6 +14,7 @@ interface CarouselProps {
         genre_ids: number[];
         overview: string;
         media_type: string;
+        id: number;
       }[]
     | undefined;
 }
@@ -20,6 +22,7 @@ interface CarouselProps {
 export default function TrendingCarousel({ trendingMovieData }: CarouselProps) {
   const IMAGE_URL = "https://image.tmdb.org/t/p/original/";
   const poster_URL = "https://image.tmdb.org/t/p/w500";
+  const router = useRouter();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [transitioning, setTransitioning] = useState(false);
 
@@ -48,6 +51,12 @@ export default function TrendingCarousel({ trendingMovieData }: CarouselProps) {
       }
     });
   }
+
+  const goToShowDetailsHandler = (id: number) => {
+    router.push(
+      currentMovie.media_type === "movie" ? `/Movie/${id}` : `/Series/${id}`
+    );
+  };
 
   const shortOverview = (overview: string) => {
     return overview.length > 200 ? `${overview.slice(0, 200)}...` : overview;
@@ -98,7 +107,12 @@ export default function TrendingCarousel({ trendingMovieData }: CarouselProps) {
           </p>
 
           <div className='flex flex-wrap items-center gap-4 mt-4'>
-            <button className='flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white w-36 h-11 rounded-xl text-sm lg:text-base font-semibold shadow-lg transition-all duration-300 hover:scale-105'>
+            <button
+              onClick={() => {
+                goToShowDetailsHandler(currentMovie.id);
+              }}
+              className='flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white w-36 h-11 rounded-xl text-sm lg:text-base font-semibold shadow-lg transition-all duration-300 hover:scale-105'
+            >
               <FaPlay /> Play
             </button>
             <button className='flex items-center justify-center gap-2 bg-gray-700 hover:bg-gray-800 text-white w-36 h-11 rounded-xl text-sm lg:text-base font-semibold shadow-lg transition-all duration-300 hover:scale-105'>
@@ -131,16 +145,16 @@ export default function TrendingCarousel({ trendingMovieData }: CarouselProps) {
           >
             {trendingMovieData.map((movie, index) => (
               <div
-          key={index}
-          className='w-24 h-36 mr-3 flex-shrink-0 bg-white rounded-lg overflow-hidden shadow-lg border border-gray-200 hover:scale-110 transition-transform duration-300'
+                key={index}
+                className='w-24 h-36 mr-3 flex-shrink-0 bg-white rounded-lg overflow-hidden shadow-lg border border-gray-200 hover:scale-110 transition-transform duration-300'
               >
-          <Image
-            src={`${poster_URL}${movie.poster_path}`}
-            alt={movie.title}
-            className='h-full w-full object-cover'
-            width={96}
-            height={144}
-          />
+                <Image
+                  src={`${poster_URL}${movie.poster_path}`}
+                  alt={movie.title}
+                  className='h-full w-full object-cover'
+                  width={96}
+                  height={144}
+                />
               </div>
             ))}
           </div>

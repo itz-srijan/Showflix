@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { FaPlay, FaPlus } from "react-icons/fa";
 import { CiCalendarDate, CiTimer } from "react-icons/ci";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import Navbar from "@/Components/Navbar";
 import Image from "next/image";
 
@@ -58,7 +58,6 @@ export default function Movie() {
   const logo = logos.find((logo) => logo.iso_639_1 === "en");
   console.log(logo);
 
-  const router = useRouter();
 
   if (!movieDetail)
     return <div className='text-white text-center mt-10'>Loading...</div>;

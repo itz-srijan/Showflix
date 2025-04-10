@@ -1,15 +1,16 @@
-import React from "react";
-
 interface NavbarItemProps {
   label: string;
+  onClick?: () => void;
 }
 
-const NavbarItem: React.FC<NavbarItemProps> = ({ label }) => {
+export default function NavbarItem({ label, onClick }: NavbarItemProps) {
   return (
-    <div className='text-white cursor-pointer px-4 py-1 hover:rounded-xl hover:bg-gray-800 transition duration-400 ease-in-out'>
+    <div
+      className='text-white cursor-pointer px-4 py-1 hover:rounded-xl hover:bg-gray-800 transition duration-400 ease-in-out'
+      role='button'
+      onClick={onClick}
+    >
       {label}
     </div>
   );
-};
-
-export default NavbarItem;
+}
