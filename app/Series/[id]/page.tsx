@@ -5,8 +5,9 @@ import { FaPlay, FaPlus } from "react-icons/fa";
 import { CiCalendarDate } from "react-icons/ci";
 import { useParams } from "next/navigation";
 import { IoMdCloseCircle } from "react-icons/io";
-import Navbar from "@/Components/Navbar";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import Navbar from "@/Components/Navbar";
 
 export default function Series() {
   interface MovieDetail {
@@ -48,6 +49,8 @@ export default function Series() {
   const imageUrl = "https://image.tmdb.org/t/p/original";
   const poster_URL = "https://image.tmdb.org/t/p/w500";
 
+  const router = useRouter();
+
   useEffect(() => {
     fetch(seriesURL)
       .then((res) => res.json())
@@ -66,6 +69,12 @@ export default function Series() {
         });
     }
   }, [seasonUrl, season]);
+
+  //open new play tab
+  const handleOpenPlayer = (id: unknown, season: number, episode: number) => {
+    const url = `/Series/${id}/play?season=${season}&episode=${episode}`;
+    window.open(url, "_blank", "noopener,noreferrer");
+  };
 
   if (!movieDetail)
     return <div className='text-white text-center mt-10'>Loading...</div>;
@@ -146,7 +155,7 @@ export default function Series() {
       <div className='absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent'></div>
       <Navbar />
       {/* Content */}
-      <div className='mt-7 relative z-10 flex flex-col justify-center min-h-screen px-6 py-2 sm:p-10 md:p-16 max-w-4xl'>
+      <div className='relative z-10 flex flex-col justify-center min-h-screen px-6 py-2 sm:p-10 md:p-16 max-w-4xl'>
         <h1 className='text-4xl sm:text-5xl font-extrabold drop-shadow-lg mb-4'>
           {movieDetail.name}
           {season > 0 && ` - ${seasonData?.name}`}
@@ -223,7 +232,10 @@ export default function Series() {
               Seasons
             </button>
           )}
-          <button className='bg-blue-600 hover:bg-blue-800 px-6 py-2.5 rounded-lg font-semibold text-white flex items-center gap-2 transition-transform hover:scale-105'>
+          <button
+            onClick={() => seasonData && handleOpenPlayer(params.id, season, 1)}
+            className='bg-blue-600 hover:bg-blue-800 px-6 py-2.5 rounded-lg font-semibold text-white flex items-center gap-2 transition-transform hover:scale-105'
+          >
             <FaPlay /> {season === 0 ? "S1 E1" : "Play E1"}
           </button>
           <button className='bg-gray-700 hover:bg-gray-800 px-6 py-2.5 rounded-lg font-semibold text-white flex items-center gap-2 transition-transform hover:scale-105'>
@@ -252,6 +264,9 @@ export default function Series() {
               `}</style>
               {seasonData?.episodes.map((ep) => (
                 <div
+                  onClick={() =>
+                    handleOpenPlayer(params.id, season, ep.episode_number)
+                  }
                   key={ep.episode_number}
                   className='relative min-w-[240px] sm:min-w-[300px] h-[190px] rounded-2xl overflow-hidden shadow-xl group cursor-pointer'
                 >

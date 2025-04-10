@@ -20,7 +20,9 @@ export default function Movie() {
 
   const [movieDetail, setMovieDetail] = useState<MovieDetail | null>(null);
   const [isExpanded, setIsExpanded] = useState(false);
-  const [logos, setLogos] = useState<{ file_path: string; iso_639_1: string }[]>([]);
+  const [logos, setLogos] = useState<
+    { file_path: string; iso_639_1: string }[]
+  >([]);
 
   const params = useParams();
   const movieId = params.id as string;
@@ -29,6 +31,11 @@ export default function Movie() {
   const backdropsUrl = `https://api.themoviedb.org/3/movie/${movieId}/images?api_key=${apiKey}`;
   const imageUrl = "https://image.tmdb.org/t/p/original";
   const LOGO_URL = "https://image.tmdb.org/t/p/w500";
+
+  const handleOpenPlayer = (id: unknown) => {
+    const url = `/Movie/${id}/play`;
+    window.open(url, "_blank", "noopener,noreferrer");
+  };
 
   useEffect(() => {
     fetch(movieUrl)
@@ -82,7 +89,7 @@ export default function Movie() {
               width={350}
               height={200}
               objectFit='contain'
-              className="mb-4"
+              className='mb-4'
             />
           ) : (
             <h1 className='text-3xl sm:text-4xl md:text-5xl font-bold'>
@@ -151,7 +158,7 @@ export default function Movie() {
           {/* Buttons */}
           <div className='mt-4 flex flex-wrap gap-4'>
             <button
-              onClick={() => router.push(`/Movie/${movieId}/Play`)}
+              onClick={() => handleOpenPlayer(movieId)}
               className='flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg text-sm sm:text-base font-semibold shadow-md transition-transform hover:scale-105'
             >
               <FaPlay /> Play
