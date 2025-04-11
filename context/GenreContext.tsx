@@ -12,6 +12,7 @@ type Genre = {
 type GenreContextType = {
   genres: Genre[];
   movieIdToGenre: (id: number) => string;
+  showGenres: () => Genre[];
 };
 
 // Create context with default values
@@ -40,8 +41,12 @@ export const GenreProvider = ({ children }: { children: ReactNode }) => {
     return genres.find((genre) => genre.id === id)?.name || "";
   };
 
+  const showGenres = () =>{
+    return genres;
+  }
+
   return (
-    <GenreContext.Provider value={{ genres, movieIdToGenre }}>
+    <GenreContext.Provider value={{ genres, movieIdToGenre, showGenres }}>
       {children}
     </GenreContext.Provider>
   );

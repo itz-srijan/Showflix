@@ -90,7 +90,7 @@ export default function Profiles() {
                 Website developed by Srijan Mondal
               </p>
               <p className='text-sm text-zinc-500'>
-                For portfolio use only. Not for commercial purposes.
+                For portfolio use only. This site was developed solely to showcase my development skills. It is not intended for any commercial purposes, and all rights belong to their respective owners. Any intellectual property rights (IPR) infringement is unintentional.
               </p>
             </div>
 
