@@ -7,6 +7,7 @@ import { CiCalendarDate, CiTimer } from "react-icons/ci";
 import { useParams } from "next/navigation";
 import Navbar from "@/Components/Navbar";
 import Image from "next/image";
+import TrailerModal from "@/Components/TrailerModal";
 
 export default function Movie() {
   interface MovieDetail {
@@ -18,6 +19,15 @@ export default function Movie() {
     release_date: string;
     runtime: number;
     poster_path: string;
+    videos: {
+      results: {
+        id: number;
+        key: string;
+        iso_639_1: string;
+        site: string;
+        type: string;
+      }[];
+    };
   }
 
   const [movieDetail, setMovieDetail] = useState<MovieDetail | null>(null);
@@ -29,7 +39,7 @@ export default function Movie() {
   const params = useParams();
   const movieId = params.id as string;
   const apiKey = process.env.NEXT_PUBLIC_TMDB_API_KEY;
-  const movieUrl = `https://api.themoviedb.org/3/movie/${movieId}?language=en-US&api_key=${apiKey}&append_to_response=image&language=en-US`;
+  const movieUrl = `https://api.themoviedb.org/3/movie/${movieId}?language=en-US&api_key=${apiKey}&append_to_response=videos&language=en-US`;
   const backdropsUrl = `https://api.themoviedb.org/3/movie/${movieId}/images?api_key=${apiKey}`;
   const imageUrl = "https://image.tmdb.org/t/p/original";
   const LOGO_URL = "https://image.tmdb.org/t/p/w500";
@@ -57,10 +67,24 @@ export default function Movie() {
       });
   }, [backdropsUrl]);
 
+  // to show trailer
+  const [youtubeKey, setYoutubeKey] = useState<string | null>(null);
+
+  const handleTrailerClick = async () => {
+    movieDetail?.videos?.results.find((item) => {
+      if (
+        item.type === "Trailer" &&
+        item.site === "Youtube" &&
+        item.iso_639_1 === "en"
+      )
+        setYoutubeKey(item.key);
+    });
+  };
+  // console.log(youtubeKey)
+
   //to add to watchlist
   const [isAdding, setIsAdding] = useState(false);
   const [added, setAdded] = useState(false);
-
   const title = movieDetail?.title;
   const posterUrl = movieDetail?.backdrop_path;
   const media_type = "movie";
@@ -111,7 +135,13 @@ export default function Movie() {
       {/* Overlay */}
       <div className='absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent'></div>
       <Navbar />
-
+      {/* showing trailer */}
+      {youtubeKey && (
+        <TrailerModal
+          youtubeKey={youtubeKey}
+          onClose={() => setYoutubeKey(null)}
+        />
+      )}
       {/* Content */}
       <div className='mt-7 relative z-10 flex flex-col justify-center min-h-screen p-6 sm:p-10 md:p-16 max-w-4xl'>
         <div className='max-w-3xl'>
@@ -198,7 +228,10 @@ export default function Movie() {
               <FaPlay /> Play
             </button>
 
-            <button className='flex items-center gap-2 bg-gray-700 hover:bg-gray-800 text-white px-6 py-2.5 rounded-lg text-sm sm:text-base font-semibold shadow-md transition-transform hover:scale-105'>
+            <button
+              onClick={handleTrailerClick}
+              className='flex items-center gap-2 bg-gray-700 hover:bg-gray-800 text-white px-6 py-2.5 rounded-lg text-sm sm:text-base font-semibold shadow-md transition-transform hover:scale-105'
+            >
               <FaPlay /> Trailer
             </button>
 

@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
-import { FaPlay} from "react-icons/fa";
+import { FaPlay } from "react-icons/fa";
+import { FaEye } from "react-icons/fa";
 import { useGenre } from "@/context/GenreContext";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { getYoutubeTrailerKey } from "@/lib/getTrailer";
+import TrailerModal from "../TrailerModal";
 
 interface CarouselProps {
   trendingMovieData:
@@ -59,6 +62,22 @@ export default function TrendingCarousel({ trendingMovieData }: CarouselProps) {
   };
 
   const currentMovie = trendingMovieData?.[currentIndex];
+  // to show trailer
+  const [youtubeKey, setYoutubeKey] = useState<string | null>(null);
+
+  const handleTrailerClick = async () => {
+    if (currentMovie) {
+      const key = await getYoutubeTrailerKey(
+        currentMovie.id,
+        currentMovie.media_type as "movie" | "tv"
+      );
+      if (key) {
+        setYoutubeKey(key);
+      } else {
+        alert("Trailer not available");
+      }
+    }
+  };
 
   const shortOverview = (overview: string) =>
     overview.length > 200 ? `${overview.slice(0, 200)}...` : overview;
@@ -81,7 +100,13 @@ export default function TrendingCarousel({ trendingMovieData }: CarouselProps) {
         />
         <div className='absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent' />
       </div>
-
+      {/* showing trailer */}
+      {youtubeKey && (
+        <TrailerModal
+          youtubeKey={youtubeKey}
+          onClose={() => setYoutubeKey(null)}
+        />
+      )}
       {/* Foreground */}
       <div className='relative z-10 h-full w-full pt-16 lg:pt-24'>
         <div className='absolute top-[40%] transform -translate-y-1/2 left-6 lg:left-20 text-white space-y-6 max-w-xl lg:max-w-2xl px-4'>
@@ -112,9 +137,12 @@ export default function TrendingCarousel({ trendingMovieData }: CarouselProps) {
               }
               className='flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white w-36 h-11 rounded-xl text-sm lg:text-base font-semibold shadow-lg transition-all duration-300 hover:scale-105'
             >
-              <FaPlay /> Play
+              <FaEye /> Watch
             </button>
-            <button className='flex items-center justify-center gap-2 bg-gray-700 hover:bg-gray-800 text-white w-36 h-11 rounded-xl text-sm lg:text-base font-semibold shadow-lg transition-all duration-300 hover:scale-105'>
+            <button
+              onClick={handleTrailerClick}
+              className='flex items-center justify-center gap-2 bg-gray-700 hover:bg-gray-800 text-white w-36 h-11 rounded-xl text-sm lg:text-base font-semibold shadow-lg transition-all duration-300 hover:scale-105'
+            >
               <FaPlay /> Trailer
             </button>
           </div>

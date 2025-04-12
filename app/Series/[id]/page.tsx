@@ -8,6 +8,7 @@ import { useParams } from "next/navigation";
 import { IoMdCloseCircle } from "react-icons/io";
 import Image from "next/image";
 import Navbar from "@/Components/Navbar";
+import TrailerModal from "@/Components/TrailerModal";
 
 export default function Series() {
   interface MovieDetail {
@@ -27,6 +28,15 @@ export default function Series() {
       id: number;
       season_number: number;
     }[];
+    videos: {
+      results: {
+        id: number;
+        key: string;
+        iso_639_1: string;
+        site: string;
+        type: string;
+      }[];
+    };
   }
   interface SeasonData {
     name: string;
@@ -34,6 +44,15 @@ export default function Series() {
     episodes: { name: string; episode_number: number; still_path: string }[];
     season_number: number;
     overview: string;
+    videos: {
+      results: {
+        id: number;
+        key: string;
+        iso_639_1: string;
+        site: string;
+        type: string;
+      }[];
+    };
   }
 
   const [movieDetail, setMovieDetail] = useState<MovieDetail | null>(null);
@@ -44,8 +63,8 @@ export default function Series() {
 
   const params = useParams();
   const apiKey = process.env.NEXT_PUBLIC_TMDB_API_KEY;
-  const seriesURL = `https://api.themoviedb.org/3/tv/${params.id}?language=en-US&api_key=${apiKey}`;
-  const seasonUrl = `https://api.themoviedb.org/3/tv/${params.id}/season/${season}?language=en-US&api_key=${apiKey}`;
+  const seriesURL = `https://api.themoviedb.org/3/tv/${params.id}?language=en-US&api_key=${apiKey}&append_to_response=videos`;
+  const seasonUrl = `https://api.themoviedb.org/3/tv/${params.id}/season/${season}?language=en-US&api_key=${apiKey}&append_to_response=videos`;
   const imageUrl = "https://image.tmdb.org/t/p/original";
   const poster_URL = "https://image.tmdb.org/t/p/w500";
 
@@ -54,6 +73,7 @@ export default function Series() {
       .then((res) => res.json())
       .then((data) => {
         setMovieDetail(data);
+        console.log(data);
       });
   }, [seriesURL]);
 
@@ -68,6 +88,30 @@ export default function Series() {
     }
   }, [seasonUrl, season]);
 
+  // to show trailer
+  const [youtubeKey, setYoutubeKey] = useState<string | null>(null);
+
+  const handleTrailerClick = async () => {
+    if (season < 1) {
+      movieDetail?.videos?.results.find((item) => {
+        if (
+          item.type === "Trailer" &&
+          item.site === "Youtube" &&
+          item.iso_639_1 === "en"
+        )
+          setYoutubeKey(item.key);
+      });
+    } else {
+      seasonData?.videos?.results.find((item) => {
+        if (
+          item.type === "Trailer" &&
+          item.site === "Youtube" &&
+          item.iso_639_1 === "en"
+        )
+          setYoutubeKey(item.key);
+      });
+    }
+  };
   //to add to watchlist
   const [isAdding, setIsAdding] = useState(false);
   const [added, setAdded] = useState(false);
@@ -188,6 +232,12 @@ export default function Series() {
       {/* Overlay */}
       <div className='absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent'></div>
       <Navbar />
+      {youtubeKey && (
+        <TrailerModal
+          youtubeKey={youtubeKey}
+          onClose={() => setYoutubeKey(null)}
+        />
+      )}
       {/* Content */}
       <div className='relative z-10 flex flex-col justify-center min-h-screen px-6 py-2 sm:p-10 md:p-16 max-w-4xl'>
         <h1 className='text-4xl sm:text-5xl font-extrabold drop-shadow-lg mb-4'>
@@ -275,7 +325,10 @@ export default function Series() {
           >
             <FaPlay /> {season === 0 ? "S1 E1" : "Play E1"}
           </button>
-          <button className='bg-gray-700 hover:bg-gray-800 px-6 py-2.5 rounded-lg font-semibold text-white flex items-center gap-2 transition-transform hover:scale-105'>
+          <button
+            onClick={handleTrailerClick}
+            className='bg-gray-700 hover:bg-gray-800 px-6 py-2.5 rounded-lg font-semibold text-white flex items-center gap-2 transition-transform hover:scale-105'
+          >
             <FaPlay /> Trailer
           </button>
           <button
