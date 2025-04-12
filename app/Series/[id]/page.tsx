@@ -114,14 +114,38 @@ export default function Series() {
       alert("Trailer not found");
     }
   };
-  //to add to watchlist
+
+  //check if present in watchlist
   const [isAdding, setIsAdding] = useState(false);
   const [added, setAdded] = useState(false);
-
+  const media_type = "tv";
   const movieId = params.id;
+
+  useEffect(() => {
+    if (!movieId) return;
+
+    const checkWatchlist = async () => {
+      try {
+        const res = await fetch(
+          `/api/watchlist/check?tmdbID=${movieId}&media_type=${media_type}`
+        );
+
+        if (!res.ok) {
+          throw new Error(`Failed to check watchlist: ${res.status}`);
+        }
+
+        const data = await res.json();
+        setAdded(data.added);
+      } catch (error) {
+        console.error("Error checking watchlist:", error);
+      }
+    };
+
+    checkWatchlist();
+  }, [movieId, media_type]);
+
   const title = movieDetail?.name;
   const posterUrl = movieDetail?.backdrop_path;
-  const media_type = "tv";
 
   const handleAddToWatchlist = async () => {
     setIsAdding(true);
@@ -313,7 +337,7 @@ export default function Series() {
           {movieDetail.number_of_seasons > 1 && (
             <button
               onClick={() => setIsOpen(true)}
-              className='bg-green-600 hover:bg-green-800 px-6 py-2.5 rounded-lg font-semibold text-white transition-transform hover:scale-105'
+              className='bg-purple-800 hover:bg-purple-950 px-6 py-2.5 rounded-lg font-semibold text-white transition-transform hover:scale-105'
             >
               Seasons
             </button>

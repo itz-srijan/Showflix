@@ -77,21 +77,40 @@ export default function Movie() {
         item.site === "YouTube" &&
         item.iso_639_1 === "en"
     );
-  
+
     if (trailer) {
       setYoutubeKey(trailer.key);
     } else {
       alert("Trailer not found");
     }
   };
-  
 
-  //to add to watchlist
+  //check if present in watchlist
   const [isAdding, setIsAdding] = useState(false);
   const [added, setAdded] = useState(false);
+  const media_type = "movie";
+
+  useEffect(() => {
+    const checkWatchlist = async () => {
+      try {
+        const res = await fetch(
+          `/api/watchlist/check?tmdbID=${movieId}&media_type=${media_type}`
+        );
+        if (res.ok) {
+          const data = await res.json();
+          setAdded(data.added);
+        }
+      } catch (error) {
+        console.error("Error checking watchlist:", error);
+      }
+    };
+
+    checkWatchlist();
+  }, [movieId, media_type]);
+
+  //to add to watchlist
   const title = movieDetail?.title;
   const posterUrl = movieDetail?.backdrop_path;
-  const media_type = "movie";
 
   const handleAddToWatchlist = async () => {
     setIsAdding(true);

@@ -25,7 +25,7 @@ export default function WatchlistPage() {
 
   const fetchWatchlist = async () => {
     try {
-      const res = await fetch("/api/watchlist/add/get");
+      const res = await fetch("/api/watchlist/get");
       const data: WatchlistItem[] = await res.json();
 
       const movieItems = data.filter((item) => item.media_type === "movie");
@@ -47,7 +47,7 @@ export default function WatchlistPage() {
   const handleClearWatchlist = async () => {
     try {
       setClearing(true);
-      const response = await fetch("/api/watchlist/add/clear", {
+      const response = await fetch("/api/watchlist/clear", {
         method: "DELETE",
       });
 
@@ -69,7 +69,7 @@ export default function WatchlistPage() {
 
   const handleDelete = async (tmdbID: string, media_type: string) => {
     try {
-      const res = await fetch("/api/watchlist/add/delete", {
+      const res = await fetch("/api/watchlist/delete", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ tmdbID, media_type }),
