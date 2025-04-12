@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
-import { FaPlay, FaPlus } from "react-icons/fa";
+import { FaPlay} from "react-icons/fa";
 import { useGenre } from "@/context/GenreContext";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
