@@ -92,24 +92,26 @@ export default function Series() {
   const [youtubeKey, setYoutubeKey] = useState<string | null>(null);
 
   const handleTrailerClick = async () => {
+    let trailer = null;
     if (season < 1) {
-      movieDetail?.videos?.results.find((item) => {
-        if (
+      trailer = movieDetail?.videos?.results.find(
+        (item) =>
           item.type === "Trailer" &&
-          item.site === "Youtube" &&
+          item.site === "YouTube" &&
           item.iso_639_1 === "en"
-        )
-          setYoutubeKey(item.key);
-      });
+      );
     } else {
-      seasonData?.videos?.results.find((item) => {
-        if (
+      trailer = seasonData?.videos?.results.find(
+        (item) =>
           item.type === "Trailer" &&
-          item.site === "Youtube" &&
+          item.site === "YouTube" &&
           item.iso_639_1 === "en"
-        )
-          setYoutubeKey(item.key);
-      });
+      );
+    }
+    if (trailer) {
+      setYoutubeKey(trailer.key);
+    } else {
+      alert("Trailer not found");
     }
   };
   //to add to watchlist

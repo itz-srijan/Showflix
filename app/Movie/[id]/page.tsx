@@ -70,17 +70,21 @@ export default function Movie() {
   // to show trailer
   const [youtubeKey, setYoutubeKey] = useState<string | null>(null);
 
-  const handleTrailerClick = async () => {
-    movieDetail?.videos?.results.find((item) => {
-      if (
+  const handleTrailerClick = () => {
+    const trailer = movieDetail?.videos?.results.find(
+      (item) =>
         item.type === "Trailer" &&
-        item.site === "Youtube" &&
+        item.site === "YouTube" &&
         item.iso_639_1 === "en"
-      )
-        setYoutubeKey(item.key);
-    });
+    );
+  
+    if (trailer) {
+      setYoutubeKey(trailer.key);
+    } else {
+      alert("Trailer not found");
+    }
   };
-  // console.log(youtubeKey)
+  
 
   //to add to watchlist
   const [isAdding, setIsAdding] = useState(false);
