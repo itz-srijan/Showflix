@@ -57,7 +57,7 @@ export default function Navbar() {
               <NavbarItem label='Movies' />
               <NavbarItem label='Series' />
               <NavbarItem label='Popular' />
-              <NavbarItem label='My List' />
+              <NavbarItem onClick={()=> router.push("/watchlist")} label='Watchlist' />
               <SearchButton isMobile={false} />
             </div>
           </div>

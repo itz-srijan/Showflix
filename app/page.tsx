@@ -73,7 +73,7 @@ export default function Home() {
                 href='https://github.com/itz-srijan'
                 target='_blank'
                 rel='noopener noreferrer'
-                className='hover:text-gray-300 transition'
+                className='hover:text-gray-600 transition'
               >
                 <FaGithub />
               </a>

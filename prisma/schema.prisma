@@ -26,6 +26,7 @@ model User {
   favoriteIds String[] @db.ObjectId
   session Session[]
   accounts Account[]
+  watchlist  MovieItem[]
 }
 
 model Account{
@@ -62,12 +63,9 @@ model VerificationToken {
   @@unique([identifier,token ])
 }
 
-model Movie{
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-  title String
-  description String
-  videoUrl String
-  thumbnailUrl String
-  genre String
-  duration String
+type MovieItem {
+  tmdbID     String
+  title      String
+  media_type String
+  posterUrl  String
 }

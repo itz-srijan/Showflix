@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { FaPlay, FaPlus } from "react-icons/fa";
+import { SiTicktick } from "react-icons/si";
 import { CiCalendarDate, CiTimer } from "react-icons/ci";
 import { useParams } from "next/navigation";
 import Navbar from "@/Components/Navbar";
@@ -16,6 +17,7 @@ export default function Movie() {
     original_language: string;
     release_date: string;
     runtime: number;
+    poster_path: string;
   }
 
   const [movieDetail, setMovieDetail] = useState<MovieDetail | null>(null);
@@ -42,7 +44,7 @@ export default function Movie() {
       .then((res) => res.json())
       .then((data) => {
         setMovieDetail(data);
-        console.log(data);
+        // console.log(data);
       });
   }, [movieUrl]);
 
@@ -55,9 +57,42 @@ export default function Movie() {
       });
   }, [backdropsUrl]);
 
-  const logo = logos.find((logo) => logo.iso_639_1 === "en");
-  console.log(logo);
+  //to add to watchlist
+  const [isAdding, setIsAdding] = useState(false);
+  const [added, setAdded] = useState(false);
 
+  const title = movieDetail?.title;
+  const posterUrl = movieDetail?.backdrop_path;
+  const media_type = "movie";
+
+  const handleAddToWatchlist = async () => {
+    setIsAdding(true);
+    try {
+      const res = await fetch("/api/watchlist/add", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          tmdbID: movieId,
+          title,
+          media_type,
+          posterUrl,
+        }),
+      });
+
+      if (res.ok) {
+        setAdded(true);
+      } else {
+        const msg = await res.text();
+        console.error("Error:", msg);
+      }
+    } catch (err) {
+      console.error("Failed to add to watchlist", err);
+    } finally {
+      setIsAdding(false);
+    }
+  };
+
+  const logo = logos.find((logo) => logo.iso_639_1 === "en");
 
   if (!movieDetail)
     return <div className='text-white text-center mt-10'>Loading...</div>;
@@ -167,8 +202,17 @@ export default function Movie() {
               <FaPlay /> Trailer
             </button>
 
-            <button className='flex items-center gap-2 bg-red-600 hover:bg-red-800 text-white px-6 py-2.5 rounded-lg text-sm sm:text-base font-semibold shadow-md transition-transform hover:scale-105'>
-              <FaPlus /> Watchlist
+            <button
+              onClick={handleAddToWatchlist}
+              disabled={isAdding || added}
+              className={`flex items-center gap-2 ${
+                added
+                  ? "bg-green-600 cursor-not-allowed"
+                  : "bg-red-600 hover:bg-red-800"
+              } text-white px-6 py-2.5 rounded-lg text-sm sm:text-base font-semibold shadow-md transition-transform hover:scale-105`}
+            >
+              {added ? <SiTicktick /> : <FaPlus />}
+              {added ? "Added" : isAdding ? "Adding..." : "Watchlist"}
             </button>
           </div>
         </div>

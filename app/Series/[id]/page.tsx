@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { FaPlay, FaPlus } from "react-icons/fa";
+import { SiTicktick } from "react-icons/si";
 import { CiCalendarDate } from "react-icons/ci";
 import { useParams } from "next/navigation";
 import { IoMdCloseCircle } from "react-icons/io";
@@ -66,6 +67,42 @@ export default function Series() {
         });
     }
   }, [seasonUrl, season]);
+
+  //to add to watchlist
+  const [isAdding, setIsAdding] = useState(false);
+  const [added, setAdded] = useState(false);
+
+  const movieId = params.id;
+  const title = movieDetail?.name;
+  const posterUrl = movieDetail?.backdrop_path;
+  const media_type = "tv";
+
+  const handleAddToWatchlist = async () => {
+    setIsAdding(true);
+    try {
+      const res = await fetch("/api/watchlist/add", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          tmdbID: movieId,
+          title,
+          media_type,
+          posterUrl,
+        }),
+      });
+
+      if (res.ok) {
+        setAdded(true);
+      } else {
+        const msg = await res.text();
+        console.error("Error:", msg);
+      }
+    } catch (err) {
+      console.error("Failed to add to watchlist", err);
+    } finally {
+      setIsAdding(false);
+    }
+  };
 
   //open new play tab
   const handleOpenPlayer = (id: unknown, season: number, episode: number) => {
@@ -241,8 +278,17 @@ export default function Series() {
           <button className='bg-gray-700 hover:bg-gray-800 px-6 py-2.5 rounded-lg font-semibold text-white flex items-center gap-2 transition-transform hover:scale-105'>
             <FaPlay /> Trailer
           </button>
-          <button className='bg-red-600 hover:bg-red-800 px-6 py-2.5 rounded-lg font-semibold text-white flex items-center gap-2 transition-transform hover:scale-105'>
-            <FaPlus /> Watchlist
+          <button
+            onClick={handleAddToWatchlist}
+            disabled={isAdding || added}
+            className={`flex items-center gap-2 ${
+              added
+                ? "bg-green-600 cursor-not-allowed"
+                : "bg-red-600 hover:bg-red-800"
+            } text-white px-6 py-2.5 rounded-lg text-sm sm:text-base font-semibold shadow-md transition-transform hover:scale-105`}
+          >
+            {added ? <SiTicktick /> : <FaPlus />}
+            {added ? "Added" : isAdding ? "Adding..." : "Watchlist"}
           </button>
         </div>
       </div>
