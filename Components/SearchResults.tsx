@@ -1,5 +1,6 @@
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { Result } from "postcss";
 
 interface SearchResultsProps {
   results:
@@ -37,7 +38,7 @@ export default function SearchResults({
               key={data.id}
               onClick={() => {
                 router.push(
-                  `/${mediaType === "tv" ? "Series" : "Movie"}/${data.id}`
+                  `/${data.media_type === "tv" ? "Series" : "Movie"}/${data.id}`
                 );
               }}
               className='relative cursor-pointer group rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300'

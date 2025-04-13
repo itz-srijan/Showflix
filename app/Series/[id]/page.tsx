@@ -83,7 +83,7 @@ export default function Series() {
         .then((res) => res.json())
         .then((data) => {
           setSeasonData(data);
-          console.log(data);
+          // console.log(data);
         });
     }
   }, [seasonUrl, season]);
@@ -221,7 +221,8 @@ export default function Series() {
 
           {/* Season Grid */}
           <div className='grid gap-6 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5'>
-            {movieDetail.seasons.slice(1).map((s) => (
+            {movieDetail.seasons.map((s) => (
+              s.name !== "Specials" &&
               <div
                 key={s.id}
                 onClick={() => {
