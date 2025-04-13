@@ -34,7 +34,7 @@ const SearchButton = ({ isMobile }: SearchButtonProps) => {
       <div className='rounded-full flex justify-between text-white bg-blue-500/50 px-1 z-30 shadow-lg shadow-blue-300/30 transition-shadow duration-300'>
         <input
           type='text'
-          className='text-white bg-transparent outline-none transition-all duration-300 p-2'
+          className='text-white w-full outline-none bg-transparent transition-all duration-300 p-2'
           placeholder='Search...'
           value={query}
           onChange={(e) => setQuery(e.target.value)}

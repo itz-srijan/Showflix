@@ -129,15 +129,38 @@ export default function Profiles() {
             </p>
 
             {/* Powered by TMDb */}
-            <div className='flex items-center justify-center md:justify-start gap-2 pt-2'>
-              <span className='text-zinc-400'>Powered by</span>
+            <div className='flex items-center justify-center md:justify-start gap-4 pt-4'>
+              <p className="text-white">We use services from</p>
+              <div className="flex flex-row gap-2">
               <Image
                 src='/images/tmdb-logo.jpg'
                 alt='TMDb Logo'
                 width={80}
                 height={20}
-                className='opacity-80'
+                className='duration-300 transform hover:scale-105 h-10 w-20 py-[0.15rem]'
               />
+              <Image
+                src='/images/mongodb.jpg'
+                alt='MongoDB Logo'
+                width={80}
+                height={30}
+                className='duration-300 transform hover:scale-105 h-10 w-20'
+              />
+              <Image
+                src='/images/vercel.jpg'
+                alt='Vercel Logo'
+                width={200}
+                height={20}
+                className='duration-300 transform hover:scale-105 h-10 w-20'
+              />
+              <Image
+                src='/images/resend.jpg'
+                alt='TMDb Logo'
+                width={80}
+                height={20}
+                className='duration-300 transform hover:scale-105 h-10 w-20'
+              />
+              </div>
             </div>
 
             {/* Communication / Contact Section */}

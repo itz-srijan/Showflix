@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import TrendingCarousel from "@/Components/Show/TrendingCarousal";
 import ShowSlider from "@/Components/Show/ShowSlider";
 import GenreCarousel from "@/Components/Show/GenreCaraousel";
-import { FaGithub,FaLinkedin } from "react-icons/fa";
+import { FaGithub, FaLinkedin } from "react-icons/fa";
 import Image from "next/image";
 
 const apiKey = process.env.NEXT_PUBLIC_TMDB_API_KEY;
@@ -53,9 +53,7 @@ export default function Home() {
       <GenreCarousel />
       <ShowSlider />
       {/* Footer */}
-      <footer
-        className='bg-black/50 backdrop-blur-md mt-14 text-zinc-400 px-6 py-10 border-t border-zinc-800'
-      >
+      <footer className='bg-black/50 backdrop-blur-md mt-14 text-zinc-400 px-6 py-10 border-t border-zinc-800'>
         <div className='max-w-7xl mx-auto space-y-6'>
           {/* Developer Info & Social Links */}
           <div className='flex flex-col md:flex-row justify-between items-center gap-6'>
@@ -64,7 +62,11 @@ export default function Home() {
                 Website developed by Srijan Mondal
               </p>
               <p className='text-sm text-zinc-500'>
-                For portfolio use only. This site was developed solely to showcase my development skills. It is not intended for any commercial purposes, and all rights belong to their respective owners. Any intellectual property rights (IPR) infringement is unintentional.
+                For portfolio use only. This site was developed solely to
+                showcase my development skills. It is not intended for any
+                commercial purposes, and all rights belong to their respective
+                owners. Any intellectual property rights (IPR) infringement is
+                unintentional.
               </p>
             </div>
 
@@ -103,15 +105,38 @@ export default function Home() {
             </p>
 
             {/* Powered by TMDb */}
-            <div className='flex items-center justify-center md:justify-start gap-2 pt-2'>
-              <span className='text-zinc-400'>Powered by</span>
-              <Image
-                src='/images/tmdb-logo.jpg'
-                alt='TMDb Logo'
-                width={80}
-                height={20}
-                className='opacity-80'
-              />
+            <div className='flex items-center justify-center md:justify-start gap-4 pt-4'>
+              <p className='text-white'>We use services from</p>
+              <div className='flex flex-row gap-2'>
+                <Image
+                  src='/images/tmdb-logo.jpg'
+                  alt='TMDb Logo'
+                  width={80}
+                  height={20}
+                  className='duration-300 transform hover:scale-105 h-10 w-20 py-[0.15rem]'
+                />
+                <Image
+                  src='/images/mongodb.jpg'
+                  alt='MongoDB Logo'
+                  width={80}
+                  height={30}
+                  className='duration-300 transform hover:scale-105 h-10 w-20'
+                />
+                <Image
+                  src='/images/vercel.jpg'
+                  alt='Vercel Logo'
+                  width={200}
+                  height={20}
+                  className='duration-300 transform hover:scale-105 h-10 w-20'
+                />
+                <Image
+                  src='/images/resend.jpg'
+                  alt='TMDb Logo'
+                  width={80}
+                  height={20}
+                  className='duration-300 transform hover:scale-105 h-10 w-20'
+                />
+              </div>
             </div>
 
             {/* Communication / Contact Section */}
