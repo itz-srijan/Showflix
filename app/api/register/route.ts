@@ -1,11 +1,23 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import prismadb from "@/lib/prismadb";
+import { userRegistrationSchema } from "@/lib/validation";
 
 export async function POST(req: Request) {
   try {
     const body = await req.json(); // Parse request body
-    const { email, name, password } = body;
+    const parsedData = userRegistrationSchema.safeParse(body);
+
+    if (!parsedData.success) {
+      return NextResponse.json(
+        { error: parsedData.error.format() },
+        { status: 400 }
+      );
+    }
+
+    // const { email, name, password } = body;
+    const { email, name, password } = parsedData.data;
+
     // Check if the email already exists
     const existingUser = await prismadb.user.findUnique({
       where: { email },

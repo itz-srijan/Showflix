@@ -6,12 +6,16 @@ import axios from "axios";
 import { signIn } from "next-auth/react";
 import GoogleSignInButton from "@/Components/googleSignInButton";
 import Image from "next/image";
+import { userRegistrationSchema, userLoginSchema } from "@/lib/validation";
+import { z } from "zod";
 
 const Auth = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [variant, setVariant] = useState("login");
+
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   //to toggle between login page and register page
   const toggleVariant = useCallback(() => {
@@ -22,21 +26,38 @@ const Auth = () => {
 
   // login for existing user
   const login = useCallback(async () => {
-    if (!email || !password) {
-      alert("Please provide both email and password.");
-      return;
-    }
+    // if (!email || !password) {
+    //   alert("Please provide both email and password.");
+    //   return;
+    // }
     // setIsLoading(true); // Start loading
 
     try {
+      setErrors({});
+      const validated = userLoginSchema.parse({ email, password });
+
       await signIn("credentials", {
-        email,
-        password,
+        // email,
+        // password,
+        // callbackUrl: "/profiles",
+        email: validated.email,
+        password: validated.password,
         callbackUrl: "/profiles",
       });
     } catch (error) {
-      alert("An unexpected error occurred.");
-      console.error("Login error:", error);
+      // alert("An unexpected error occurred.");
+      // console.error("Login error:", error);
+
+      if (error instanceof z.ZodError) {
+        const fieldErrors: { [key: string]: string } = {};
+        error.errors.forEach((err) => {
+          if (err.path[0]) fieldErrors[err.path[0]] = err.message;
+        });
+        setErrors(fieldErrors);
+      } else {
+        alert("An unexpected error occurred.");
+        console.error("Login error:", error);
+      }
     }
     // finally {
     //   setIsLoading(false); // Stop loading
@@ -45,30 +66,49 @@ const Auth = () => {
 
   //register a new user
   const register = useCallback(async () => {
-    if (!email || !name || !password) {
-      alert("Please fill out all fields.");
-      return;
-    }
-
+    // if (!email || !name || !password) {
+    //   alert("Please fill out all fields.");
+    //   return;
+    // }
     try {
-      const response = await axios.post("/api/register", {
-        email,
-        name,
-        password,
-      });
+      setErrors({});
+      const validated = userRegistrationSchema.parse({ name, email, password });
+
+      const response = await axios.post("/api/register", validated);
       console.log("Registration successful:", response.data);
-      login(); // Log in the user after registering
+
+      login();
+
+      // const response = await axios.post("/api/register", {
+      //   email,
+      //   name,
+      //   password,
+      // });
+      // console.log("Registration successful:", response.data);
+      // login(); // Log in the user after registering
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response?.status === 422) {
-        alert(error.response.data.error); // Handle "Email taken"
+      // if (axios.isAxiosError(error) && error.response?.status === 422) {
+      //   alert(error.response.data.error); // Handle "Email taken"
+      // } else {
+      //   console.error(
+      //     "Unexpected error:",
+      //     axios.isAxiosError(error)
+      //       ? error.response?.data || error.message
+      //       : error
+      //   );
+      //   alert("An unexpected error occurred. Please try again.");
+      // }
+      if (error instanceof z.ZodError) {
+        const fieldErrors: { [key: string]: string } = {};
+        error.errors.forEach((err) => {
+          if (err.path[0]) fieldErrors[err.path[0]] = err.message;
+        });
+        setErrors(fieldErrors);
+      } else if (axios.isAxiosError(error) && error.response?.status === 422) {
+        alert(error.response.data.error);
       } else {
-        console.error(
-          "Unexpected error:",
-          axios.isAxiosError(error)
-            ? error.response?.data || error.message
-            : error
-        );
-        alert("An unexpected error occurred. Please try again.");
+        console.error("Register error:", error);
+        alert("An unexpected error occurred.");
       }
     }
   }, [email, name, password, login]);
@@ -92,24 +132,30 @@ const Auth = () => {
 
       {/* Auth Form */}
       <div className='relative z-10 flex justify-center items-center h-full px-4'>
-        <div className='bg-black bg-opacity-75 backdrop-blur-sm p-10 rounded-xl shadow-xl w-full max-w-xs text-white animate-fade-in'>
-          <h2 className='text-3xl md:text-4xl font-semibold mb-6 text-center'>
+        <div className='bg-black bg-opacity-75 backdrop-blur-sm px-6 py-8 rounded-xl shadow-xl w-full max-w-xs text-white animate-fade-in'>
+          <h2 className='text-3xl md:text-4xl font-semibold mb-4 text-center'>
             {variant === "login" ? "Sign In" : "Create an Account"}
           </h2>
 
-          <div className='flex flex-col space-y-4 w-full'>
+          <div className='flex flex-col w-full'>
             {variant === "register" && (
-              <Input
-                onChange={(ev: React.ChangeEvent<HTMLInputElement>) =>
-                  setName(ev.target.value)
-                }
-                value={name}
-                id='name'
-                type='text'
-                placeholder='Your Name'
-                className='w-full'
-              />
+              <>
+                <Input
+                  onChange={(ev: React.ChangeEvent<HTMLInputElement>) =>
+                    setName(ev.target.value)
+                  }
+                  value={name}
+                  id='name'
+                  type='text'
+                  placeholder='Your Name'
+                  className='w-full'
+                />
+                {errors.name && (
+                  <p className='text-red-500 text-sm'>{errors.name}</p>
+                )}
+              </>
             )}
+
             <Input
               onChange={(ev: React.ChangeEvent<HTMLInputElement>) =>
                 setEmail(ev.target.value)
@@ -120,6 +166,10 @@ const Auth = () => {
               placeholder='Email Address'
               className='w-full'
             />
+            {errors.email && (
+              <p className='text-red-500 text-sm'>{errors.email}</p>
+            )}
+
             <Input
               onChange={(ev: React.ChangeEvent<HTMLInputElement>) =>
                 setPassword(ev.target.value)
@@ -130,6 +180,7 @@ const Auth = () => {
               placeholder='Password'
               className='w-full'
             />
+            {errors.password && <p className="text-red-500 text-sm ">{errors.password}</p>}
 
             <button
               onClick={variant === "login" ? login : register}
@@ -172,3 +223,4 @@ const Auth = () => {
   );
 };
 export default Auth;
+
