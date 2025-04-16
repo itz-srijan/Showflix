@@ -42,7 +42,7 @@ export default function Navbar() {
               )}
             </button>
             <Image
-              onclick= {()=> router.push('/')}
+              onClick= {()=> router.push('/')}
               className='cursor-pointer z-50 rounded shadow-sm hover:opacity-90 transition-opacity duration-200'
               src='/images/logo.jpg'
               alt='logo'
