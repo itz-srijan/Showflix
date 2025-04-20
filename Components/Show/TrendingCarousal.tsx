@@ -174,7 +174,7 @@ export default function TrendingCarousel({ trendingMovieData }: CarouselProps) {
                 onClick={() =>
                   goToShowDetailsHandler(movie.id, movie.media_type)
                 }
-                className='w-24 h-36 mr-3 flex-shrink-0 bg-white rounded-lg overflow-hidden shadow-lg border border-gray-200 hover:scale-110 transition-transform duration-300'
+                className='w-24 h-36 mr-3 flex-shrink-0 bg-white rounded-lg overflow-hidden shadow-lg border border-gray-200 hover:scale-110 transition-transform duration-300 cursor-pointer'
               >
                 <Image
                   src={`${poster_URL}${movie.poster_path}`}

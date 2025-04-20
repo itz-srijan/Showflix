@@ -39,18 +39,19 @@ export default function Slider({
   useEffect(() => {
     const carousel = carouselRef.current;
     if (!carousel) return;
-
+  
     // Initial check
     checkScrollPosition();
-
+  
     // Listener on scroll
     carousel.addEventListener("scroll", checkScrollPosition);
-
+  
     // Cleanup
     return () => {
       carousel.removeEventListener("scroll", checkScrollPosition);
     };
-  }, []);
+  }, [movieData]);
+  
 
   const scroll = (direction: "left" | "right") => {
     const carousel = carouselRef.current;
@@ -74,7 +75,7 @@ export default function Slider({
 
   return (
     <div
-      className='relative w-full max-w-7xl mx-auto mt-8 select-none'
+      className='relative w-full mb-2 max-w-7xl mx-auto select-none'
       onMouseDown={(e) => {
         const carousel = carouselRef.current;
         if (carousel) {
@@ -99,7 +100,7 @@ export default function Slider({
         }
       }}
     >
-      <h2 className='text-white text-2xl font-bold mb-4 px-6'>
+      <h2 className='text-white text-2xl font-bold py-1 px-6'>
         {sliderHeader}
       </h2>
 

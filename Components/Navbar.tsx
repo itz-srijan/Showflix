@@ -55,10 +55,16 @@ export default function Navbar() {
           <div className='hidden lg:flex flex-1 justify-center'>
             <div className='flex flex-row gap-6 items-center text-sm font-medium text-zinc-300'>
               <NavbarItem onClick={() => router.push("/")} label='Home' />
-              <NavbarItem label='Movies' />
+              <NavbarItem
+                onClick={() => router.push("/lists/movies")}
+                label='Movies'
+              />
               <NavbarItem label='Series' />
               <NavbarItem label='Popular' />
-              <NavbarItem onClick={()=> router.push("/watchlist")} label='Watchlist' />
+              <NavbarItem
+                onClick={() => router.push("/watchlist")}
+                label='Watchlist'
+              />
               <SearchButton isMobile={false} />
             </div>
           </div>
