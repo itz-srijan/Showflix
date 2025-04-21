@@ -42,7 +42,7 @@ export default function Navbar() {
               )}
             </button>
             <Image
-              onClick= {()=> router.push('/')}
+              onClick={() => router.push("/")}
               className='cursor-pointer z-50 rounded shadow-sm hover:opacity-90 transition-opacity duration-200'
               src='/images/logo.jpg'
               alt='logo'
@@ -59,8 +59,11 @@ export default function Navbar() {
                 onClick={() => router.push("/lists/movies")}
                 label='Movies'
               />
-              <NavbarItem label='Series' />
-              <NavbarItem label='Popular' />
+              <NavbarItem
+                label='Series'
+                onClick={() => router.push("/lists/series")}
+              />
+              {/* <NavbarItem label='Popular' /> */}
               <NavbarItem
                 onClick={() => router.push("/watchlist")}
                 label='Watchlist'
