@@ -36,7 +36,7 @@ export default function Home() {
       });
   }, []);
 
-  const trendingMovieData = movieData?.results.map((movie) => ({
+  const trendingMovieData = movieData?.results.filter((movie)=> movie.media_type === "movie" || movie.media_type === "tv").map((movie) => ({
     backdrop_path: movie.backdrop_path,
     poster_path: movie.poster_path,
     title: movie.title ? movie.title : movie.name,
@@ -126,13 +126,6 @@ export default function Home() {
                   src='/images/vercel.jpg'
                   alt='Vercel Logo'
                   width={200}
-                  height={20}
-                  className='duration-300 transform hover:scale-105 h-10 w-20'
-                />
-                <Image
-                  src='/images/resend.jpg'
-                  alt='TMDb Logo'
-                  width={80}
                   height={20}
                   className='duration-300 transform hover:scale-105 h-10 w-20'
                 />

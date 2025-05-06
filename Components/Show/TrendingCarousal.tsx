@@ -48,14 +48,21 @@ export default function TrendingCarousel({ trendingMovieData }: CarouselProps) {
   };
 
   const genreName: string[] = [];
-  if (trendingMovieData && trendingMovieData.length > 0) {
-    trendingMovieData[currentIndex].genre_ids.forEach((id) => {
-      const gnr = movieIdToGenre(id);
-      if (gnr.length > 0) {
-        genreName.push(gnr);
-      }
-    });
-  }
+
+if (
+  Array.isArray(trendingMovieData) &&
+  trendingMovieData.length > 0 &&
+  trendingMovieData[currentIndex] &&
+  Array.isArray(trendingMovieData[currentIndex].genre_ids)
+) {
+  trendingMovieData[currentIndex].genre_ids.forEach((id) => {
+    const gnr = movieIdToGenre(id);
+    if (gnr.length > 0) {
+      genreName.push(gnr);
+    }
+  });
+}
+
 
   const goToShowDetailsHandler = (id: number, media_type: string) => {
     router.push(media_type === "movie" ? `/Movie/${id}` : `/Series/${id}`);
