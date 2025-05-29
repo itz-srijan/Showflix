@@ -3,12 +3,10 @@
 import Navbar from "@/Components/Navbar";
 import Footer from "@/Components/Footer";
 import { useEffect, useState } from "react";
+import tmdb from "@/lib/axios";
 import TrendingCarousel from "@/Components/Show/TrendingCarousal";
 import ShowSlider from "@/Components/Show/ShowSlider";
 import GenreCarousel from "@/Components/Show/GenreCaraousel";
-
-const apiKey = process.env.NEXT_PUBLIC_TMDB_API_KEY;
-const url = `https://api.themoviedb.org/3/trending/all/day?language=en-US&api_key=${apiKey}`;
 
 export default function Home() {
   interface MovieData {
@@ -27,12 +25,15 @@ export default function Home() {
   const [movieData, setMovieData] = useState<MovieData | null>(null);
   // fetching trending movies
   useEffect(() => {
-    fetch(url)
-      .then((res) => res.json())
-      .then((data) => {
-        setMovieData(data);
-        console.log(data);
-      });
+    async function fetchTrendingMovies() {
+      try {
+        const res = await tmdb.get("/trending/all/day");
+        setMovieData(res.data);
+      } catch (error) {
+        console.error("facing issues while fetching trending data:", error);
+      }
+    }
+    fetchTrendingMovies();
   }, []);
 
   const trendingMovieData = movieData?.results
